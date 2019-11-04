@@ -1,0 +1,39 @@
+﻿<div id="login_middle" class="login_middle_border">
+  <div class="lg_mid_lt">
+	<div class="clear"></div>
+  </div>
+  <div class="lg_mid_mid "></div>
+  <div class="lg_mid_rt ">
+	<div class="lg_mid_rt_top"></div>
+	<div class="lg_mid_rt_mid">
+		<form id= "login_form" name="login_form" action="index.html" method="post" onsubmit="return onsubmit_login()">
+		<ul>
+			<li>
+				<span class="fnt_lg_14">现编现玩 - 儿童编程兴趣 - 登录</span>
+			</li>
+			<li>
+				<span class="fnt_lg_12 span_01">帐&nbsp;&nbsp;号：&nbsp;&nbsp;</span>
+				<span><input name="login_id" id="login_id" class="editbox4" value="" size="20" /></span>
+			</li>
+			<li>
+				<span class="fnt_lg_12 span_01">密&nbsp;&nbsp;码：&nbsp;&nbsp;</span>
+				<span><input class="editbox4" type="password" size="20" name="login_pwd" id="login_pwd" /></span>
+			</li>
+			<!-- 
+			<li>
+				<span class="fnt_lg_12">验证码：</span>
+				<span><input class="wenbenkuang" name="verifycode" id="verifycode" type="text" value="" maxLength=4 size=10 /></span>
+			</li>
+			-->
+			<li>
+				<span class="span_submit"><input name="login_submit" type="submit" class="submit" id="login_submit" value="登 陆" /></span>
+				<span class="span_cancel"><input name="login_cancel" type="button" class="button" id="login_cancel" value="取 消" onClick="cancel_login()" /></span>
+			</li>
+		</ul>
+		</form>
+	</div>
+	<div class="lg_mid_rt_bot"></div>
+  </div>
+  <div class="clear"></div>
+</div>
+<div class="clear"></div>
