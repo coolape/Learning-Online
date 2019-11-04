@@ -4,6 +4,8 @@
 defProtocol = {}
 defProtocol.name = "NetProtoLearning" -- 协议名字
 defProtocol.isSendClientInt2bio = false -- 发送给客户端时是否把int转成bio
+defProtocol.isGenLuaClientFile = false -- 生成lua客户端接口文件
+defProtocol.isGenJsClientFile = true -- 生成js客户端接口文件
 --===================================================
 --===================================================
 --===================================================
@@ -61,12 +63,6 @@ defProtocol.structs.custInfor = {
     }
 }
 
---defProtocol.structs.servers = {
---    "服务器列表",
---    {
---        list = { { defProtocol.structs.server, defProtocol.structs.server }, "服务器列表" },
---    }
---}
 --===================================================
 --===================================================
 --===================================================
@@ -90,23 +86,23 @@ login = {       -- 接口名
         desc = "注册", -- 接口说明
         input = {"custId", "password", "name", "phone", "email", "channel", "note"}, -- 入参
         inputDesc = {"客户id", "密码", "名字", "电话号码", "邮箱", "渠道号", "备注"}, -- 入参说明
-        output = {structs.retInfor, structs.userInfor}, -- 出参
-        outputDesc = {"返回信息", "客户信息"}, -- 出参说明
+        output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
+        outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
         logic = "cmd4user"
     },
     login = {
         desc = "登陆", -- 接口说明
         input = {"custId", "password"}, -- 入参
         inputDesc = {"客户id", "密码"}, -- 入参说明
-        output = {structs.retInfor, structs.userInfor}, -- 出参
-        outputDesc = {"返回信息", "客户信息"}, -- 出参说明
+        output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
+        outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
         logic = "cmd4user"
     },
     logout = {
         desc = "登出", -- 接口说明
         input = {"custId"}, -- 入参
         inputDesc = {"客户名"}, -- 入参说明
-        output = {structs.retInfor, structs.userInfor}, -- 出参
+        output = {structs.retInfor}, -- 出参
         outputDesc = {"返回信息"}, -- 出参说明
         logic = "cmd4user"
     }

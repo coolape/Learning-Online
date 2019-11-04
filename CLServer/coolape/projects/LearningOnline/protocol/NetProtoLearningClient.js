@@ -1,4 +1,4 @@
-    var NetProtoLearning = {};
+    var NetProtoLearning = {}; // 网络协议
     NetProtoLearning.__sessionID = 0; // 会话ID
     NetProtoLearning.dispatch = {};
     //==============================
@@ -82,7 +82,7 @@
     // 登出
     logout = function(custId) {
         var ret = {};
-        ret[0] = 22;
+        ret[0] = 13;
         ret[1] = NetProtoLearning.__sessionID;
         ret[14] = custId; // 客户名
         return ret;
@@ -90,24 +90,24 @@
     // 登陆
     login = function(custId, password) {
         var ret = {};
-        ret[0] = 23;
+        ret[0] = 15;
         ret[1] = NetProtoLearning.__sessionID;
         ret[14] = custId; // 客户id
-        ret[15] = password; // 密码
+        ret[16] = password; // 密码
         return ret;
     },
     // 注册
     regist = function(custId, password, name, phone, email, channel, note) {
         var ret = {};
-        ret[0] = 24;
+        ret[0] = 17;
         ret[1] = NetProtoLearning.__sessionID;
         ret[14] = custId; // 客户id
-        ret[15] = password; // 密码
-        ret[16] = name; // 名字
-        ret[17] = phone; // 电话号码
-        ret[18] = email; // 邮箱
-        ret[19] = channel; // 渠道号
-        ret[20] = note; // 备注
+        ret[16] = password; // 密码
+        ret[18] = name; // 名字
+        ret[19] = phone; // 电话号码
+        ret[20] = email; // 邮箱
+        ret[21] = channel; // 渠道号
+        ret[22] = note; // 备注
         return ret;
     },
     }
@@ -123,10 +123,14 @@
     },
     ///@class NetProtoLearning.RC_login
     ///@field public retInfor NetProtoLearning.ST_retInfor 返回信息
+    ///@field public custInfor NetProtoLearning.ST_custInfor 客户信息
+    ///@field public sessionID  会话id
     login = function(map) {
         var ret = {};
         ret.cmd = "login";
         ret.retInfor = NetProtoLearning.ST_retInfor.parse(map[2]) // 返回信息
+        ret.custInfor = NetProtoLearning.ST_custInfor.parse(map[23]) // 客户信息
+        ret.sessionID = map[24] // 会话id
         return ret;
     },
     ///@class NetProtoLearning.RC_regist
@@ -139,9 +143,9 @@
     },
     }
     //==============================
-    NetProtoLearning.dispatch[22]={onReceive = NetProtoLearning.recive.logout, send = NetProtoLearning.send.logout}
-    NetProtoLearning.dispatch[23]={onReceive = NetProtoLearning.recive.login, send = NetProtoLearning.send.login}
-    NetProtoLearning.dispatch[24]={onReceive = NetProtoLearning.recive.regist, send = NetProtoLearning.send.regist}
+    NetProtoLearning.dispatch[13]={onReceive = NetProtoLearning.recive.logout, send = NetProtoLearning.send.logout}
+    NetProtoLearning.dispatch[15]={onReceive = NetProtoLearning.recive.login, send = NetProtoLearning.send.login}
+    NetProtoLearning.dispatch[17]={onReceive = NetProtoLearning.recive.regist, send = NetProtoLearning.send.regist}
     //==============================
     NetProtoLearning.cmds = {
         logout = "logout", // 登出,

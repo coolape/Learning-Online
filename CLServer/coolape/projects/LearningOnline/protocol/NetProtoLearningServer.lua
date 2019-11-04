@@ -1,5 +1,5 @@
 do
-    ---@class NetProtoLearning
+    ---@class NetProtoLearning 网络协议
     local NetProtoLearning = {}
     local table = table
     local CMD = {}
@@ -101,7 +101,7 @@ do
         ret.__session__ = map[1]
         ret.callback = map[3]
         ret.custId = map[14]-- 客户id
-        ret.password = map[15]-- 密码
+        ret.password = map[16]-- 密码
         return ret
     end,
     -- 注册
@@ -111,12 +111,12 @@ do
         ret.__session__ = map[1]
         ret.callback = map[3]
         ret.custId = map[14]-- 客户id
-        ret.password = map[15]-- 密码
-        ret.name = map[16]-- 名字
-        ret.phone = map[17]-- 电话号码
-        ret.email = map[18]-- 邮箱
-        ret.channel = map[19]-- 渠道号
-        ret.note = map[20]-- 备注
+        ret.password = map[16]-- 密码
+        ret.name = map[18]-- 名字
+        ret.phone = map[19]-- 电话号码
+        ret.email = map[20]-- 邮箱
+        ret.channel = map[21]-- 渠道号
+        ret.note = map[22]-- 备注
         return ret
     end,
     }
@@ -124,30 +124,32 @@ do
     NetProtoLearning.send = {
     logout = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
         local ret = {}
-        ret[0] = 22
+        ret[0] = 13
         ret[3] = mapOrig and mapOrig.callback or nil
         ret[2] = NetProtoLearning.ST_retInfor.toMap(retInfor); -- 返回信息
         return ret
     end,
-    login = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
+    login = function(retInfor, custInfor, sessionID, mapOrig) -- mapOrig:客户端原始入参
         local ret = {}
-        ret[0] = 23
+        ret[0] = 15
         ret[3] = mapOrig and mapOrig.callback or nil
         ret[2] = NetProtoLearning.ST_retInfor.toMap(retInfor); -- 返回信息
+        ret[23] = NetProtoLearning.ST_custInfor.toMap(custInfor); -- 客户信息
+        ret[24] = sessionID; -- 会话id
         return ret
     end,
     regist = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
         local ret = {}
-        ret[0] = 24
+        ret[0] = 17
         ret[3] = mapOrig and mapOrig.callback or nil
         ret[2] = NetProtoLearning.ST_retInfor.toMap(retInfor); -- 返回信息
         return ret
     end,
     }
     --==============================
-    NetProtoLearning.dispatch[22]={onReceive = NetProtoLearning.recive.logout, send = NetProtoLearning.send.logout, logicName = "cmd4user"}
-    NetProtoLearning.dispatch[23]={onReceive = NetProtoLearning.recive.login, send = NetProtoLearning.send.login, logicName = "cmd4user"}
-    NetProtoLearning.dispatch[24]={onReceive = NetProtoLearning.recive.regist, send = NetProtoLearning.send.regist, logicName = "cmd4user"}
+    NetProtoLearning.dispatch[13]={onReceive = NetProtoLearning.recive.logout, send = NetProtoLearning.send.logout, logicName = "cmd4user"}
+    NetProtoLearning.dispatch[15]={onReceive = NetProtoLearning.recive.login, send = NetProtoLearning.send.login, logicName = "cmd4user"}
+    NetProtoLearning.dispatch[17]={onReceive = NetProtoLearning.recive.regist, send = NetProtoLearning.send.regist, logicName = "cmd4user"}
     --==============================
     NetProtoLearning.cmds = {
         logout = "logout", -- 登出,
