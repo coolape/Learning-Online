@@ -84,8 +84,8 @@ login = {       -- 接口名
 --]]
     regist = {
         desc = "注册", -- 接口说明
-        input = {"custId", "password", "name", "phone", "email", "channel", "note"}, -- 入参
-        inputDesc = {"客户id", "密码", "名字", "电话号码", "邮箱", "渠道号", "备注"}, -- 入参说明
+        input = {"custId", "password", "name", "phone", "phone2", "email", "channel", "note"}, -- 入参
+        inputDesc = {"客户id", "密码", "名字", "电话号码", "紧急联系电话", "邮箱", "渠道号", "备注"}, -- 入参说明
         output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
         outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
         logic = "cmd4user"

@@ -97,7 +97,7 @@
         return ret;
     },
     // 注册
-    regist = function(custId, password, name, phone, email, channel, note) {
+    regist = function(custId, password, name, phone, phone2, email, channel, note) {
         var ret = {};
         ret[0] = 17;
         ret[1] = NetProtoLearning.__sessionID;
@@ -105,6 +105,7 @@
         ret[16] = password; // 密码
         ret[18] = name; // 名字
         ret[19] = phone; // 电话号码
+        ret[25] = phone2; // 紧急联系电话
         ret[20] = email; // 邮箱
         ret[21] = channel; // 渠道号
         ret[22] = note; // 备注
@@ -135,10 +136,14 @@
     },
     ///@class NetProtoLearning.RC_regist
     ///@field public retInfor NetProtoLearning.ST_retInfor 返回信息
+    ///@field public custInfor NetProtoLearning.ST_custInfor 客户信息
+    ///@field public sessionID  会话id
     regist = function(map) {
         var ret = {};
         ret.cmd = "regist";
         ret.retInfor = NetProtoLearning.ST_retInfor.parse(map[2]) // 返回信息
+        ret.custInfor = NetProtoLearning.ST_custInfor.parse(map[23]) // 客户信息
+        ret.sessionID = map[24] // 会话id
         return ret;
     },
     }

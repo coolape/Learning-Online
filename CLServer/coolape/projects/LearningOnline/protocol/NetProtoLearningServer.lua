@@ -114,6 +114,7 @@ do
         ret.password = map[16]-- 密码
         ret.name = map[18]-- 名字
         ret.phone = map[19]-- 电话号码
+        ret.phone2 = map[25]-- 紧急联系电话
         ret.email = map[20]-- 邮箱
         ret.channel = map[21]-- 渠道号
         ret.note = map[22]-- 备注
@@ -138,11 +139,13 @@ do
         ret[24] = sessionID; -- 会话id
         return ret
     end,
-    regist = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
+    regist = function(retInfor, custInfor, sessionID, mapOrig) -- mapOrig:客户端原始入参
         local ret = {}
         ret[0] = 17
         ret[3] = mapOrig and mapOrig.callback or nil
         ret[2] = NetProtoLearning.ST_retInfor.toMap(retInfor); -- 返回信息
+        ret[23] = NetProtoLearning.ST_custInfor.toMap(custInfor); -- 客户信息
+        ret[24] = sessionID; -- 会话id
         return ret
     end,
     }
