@@ -1,7 +1,7 @@
 -- include "config.path"
 -- cd into  ./CLServer first
-projectDesc="账号管理"
-projectName = "usermgr"
+projectDesc="线编现玩"
+projectName = "LearningOnline"
 
 skynetRoot = "./skynet/"
 coolapeRoot = "./coolape/"
@@ -37,8 +37,8 @@ logLev = "debug"
 logger = coolapeRoot .. "logs/" .. projectName .. ".log"
 logpath = "."
 harbor = 0
-consolePort = 8001
-httpPort = 8801
+consolePort = 8010
+httpPort = 8810
 -- socketPort = 9000
 -- address = "127.0.0.1:2526"
 -- master = "127.0.0.1:2017"
@@ -50,4 +50,4 @@ bootstrap = "snlua bootstrap"	-- The service for bootstrap
 
 ---others------------------------------
 --网络协议服务名
-NetProtoName = "NetProtoUsermgr"
+NetProtoName = "NetProtoLearning"

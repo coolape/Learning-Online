@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #生成协议
-projectName="usermgr"
-database="usermgr"
+projectName="LearningOnline"
+database="LearningOnline"
 skynet="./skynet/"
 protocolCfg="./coolape/projects/${projectName}/dbDesign/"
 outPath="./coolape/projects/${projectName}/db/"
