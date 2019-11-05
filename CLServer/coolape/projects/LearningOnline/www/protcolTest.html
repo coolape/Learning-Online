@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>CLServer Manager</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../../www/js/myutl.js"></script>
+    <script src="../protocol/NetProtoLearnClient.js"></script>
+    <script>
+
+
+        function init() {
+            console.log("--------test 接口");
+            var params = NetProtoLearn.send.login("uid", "123");
+            myutl.ajaxJSONP("http://127.0.0.1:8810/LearningOnline/get", params,
+                function (result, status, xhr) {
+                    var ret = NetProtoLearn.recive.login(result)
+                    console.log(ret)
+                    console.log(ret.retInfor.code)
+                    console.log(ret.custInfor.idx)
+                    console.log(ret.sessionID)
+                },
+                function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus);
+                })
+        }
+
+
+        $(document).ready(init)
+    </script>
+
+</body>
+
+</html>

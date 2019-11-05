@@ -2,7 +2,13 @@
 -- cd into  ./CLServer first
 projectDesc="线编现玩"
 projectName = "LearningOnline"
+--网络协议服务名
+NetProtoName = "NetProtoLearn"
+consolePort = 8010
+httpPort = 8810
+-- socketPort = 9000
 
+----------------------------------------------
 skynetRoot = "./skynet/"
 coolapeRoot = "./coolape/"
 projectRoot = "./coolape/projects/"
@@ -34,12 +40,9 @@ cpath = skynetRoot.."cservice/?.so"
 thread = 1
 --logLev:日志等级  debug, warning, error
 logLev = "debug"
-logger = coolapeRoot .. "logs/" .. projectName .. ".log"
+-- logger = coolapeRoot .. "logs/" .. projectName .. ".log"
 logpath = "."
 harbor = 0
-consolePort = 8010
-httpPort = 8810
--- socketPort = 9000
 -- address = "127.0.0.1:2526"
 -- master = "127.0.0.1:2017"
 -- standalone = "0.0.0.0:2017"
@@ -47,7 +50,3 @@ start = "main"	-- main script
 bootstrap = "snlua bootstrap"	-- The service for bootstrap
 -- snax_interface_g = "snax_g"
 -- daemon = "./skynet.pid"
-
----others------------------------------
---网络协议服务名
-NetProtoName = "NetProtoLearning"

@@ -2,8 +2,9 @@
 -- 定义接口协议
 --]]
 defProtocol = {}
-defProtocol.name = "NetProtoLearning" -- 协议名字
+defProtocol.name = "NetProtoLearn" -- 协议名字
 defProtocol.isSendClientInt2bio = false -- 发送给客户端时是否把int转成bio
+defProtocol.compatibleJsonp = true;     -- 是否考虑兼容json
 defProtocol.isGenLuaClientFile = false -- 生成lua客户端接口文件
 defProtocol.isGenJsClientFile = true -- 生成js客户端接口文件
 --===================================================
@@ -88,7 +89,7 @@ login = {       -- 接口名
         inputDesc = {"客户id", "密码", "名字", "电话号码", "紧急联系电话", "邮箱", "渠道号", "备注"}, -- 入参说明
         output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
         outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
-        logic = "cmd4user"
+        logic = "cmd4cust"
     },
     login = {
         desc = "登陆", -- 接口说明
@@ -96,7 +97,7 @@ login = {       -- 接口名
         inputDesc = {"客户id", "密码"}, -- 入参说明
         output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
         outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
-        logic = "cmd4user"
+        logic = "cmd4cust"
     },
     logout = {
         desc = "登出", -- 接口说明
@@ -104,7 +105,7 @@ login = {       -- 接口名
         inputDesc = {"客户名"}, -- 入参说明
         output = {structs.retInfor}, -- 出参
         outputDesc = {"返回信息"}, -- 出参说明
-        logic = "cmd4user"
+        logic = "cmd4cust"
     }
 }
 

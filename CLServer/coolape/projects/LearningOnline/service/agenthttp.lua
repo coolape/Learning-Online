@@ -73,7 +73,7 @@ function CMD.onrequset(url, method, header, body)
         elseif path and path:lower() == httpCMD.httpPost then
             if body then
                 local content = parseStrBody(body)
-                local ret = { "menu1", "item2", "item3" }
+                local ret = {"menu1", "item2", "item3"}
                 return json.encode(ret)
             else
                 return nil
@@ -87,6 +87,19 @@ function CMD.onrequset(url, method, header, body)
             CMD.stop()
             return ""
         elseif path == httpCMD.httpGet then
+            -- 处理统一的get请求
+            local requst = urllib.parse_query(query)
+            local cmd = requst["0"] or requst[0]
+            requst[0] = tonumber(cmd)
+            local result = skynet.call(NetProtoName, "lua", "dispatcher", skynet.self(), requst, nil)
+            printe(json.encode(result))
+            local jsoncallback = requst.callback
+            if jsoncallback ~= nil then
+                -- 说明ajax调用
+                return jsoncallback .. "(" .. json.encode(result) .. ")"
+            else
+                return json.encode(result)
+            end
         elseif path == httpCMD.httpManage then
             -- 处理统一的get请求
             local requst = urllib.parse_query(query)
@@ -128,9 +141,14 @@ function CMD.getLogic(logicName)
 end
 
 -- ======================================================
-skynet.start(function()
-    skynet.dispatch("lua", function(_, _, command, ...)
-        local f = CMD[command]
-        skynet.ret(skynet.pack(f(...)))
-    end)
-end)
+skynet.start(
+    function()
+        skynet.dispatch(
+            "lua",
+            function(_, _, command, ...)
+                local f = CMD[command]
+                skynet.ret(skynet.pack(f(...)))
+            end
+        )
+    end
+)

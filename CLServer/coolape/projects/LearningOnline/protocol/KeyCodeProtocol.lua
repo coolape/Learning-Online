@@ -15,22 +15,22 @@ do
     map[0] = "cmd"
     map["note"] = 22
     map["code"] = 11
-    map["__currIndex__"] = 26
+    map["custId"] = 14
     map["msg"] = 10
     map["callback"] = 3
     map["sessionID"] = 24
     map["cmd"] = 0
-    map["phone2"] = 25
-    map["login"] = 15
-    map["custId"] = 14
     map["__session__"] = 1
-    map["phone"] = 19
+    map["login"] = 15
+    map[19] = "phone"
+    map["phone2"] = 25
+    map[21] = "channel"
     map["email"] = 20
     map[24] = "sessionID"
     map["idx"] = 12
     map[17] = "regist"
     map[18] = "name"
-    map[19] = "phone"
+    map["regist"] = 17
     map[20] = "email"
     map["logout"] = 13
     map[22] = "note"
@@ -39,10 +39,10 @@ do
     map[25] = "phone2"
     map["name"] = 18
     map["channel"] = 21
-    map[21] = "channel"
+    map["phone"] = 19
     map["custInfor"] = 23
-    map["regist"] = 17
     map["retInfor"] = 2
+    map["__currIndex__"] = 26
     
 
     KeyCodeProtocol.getKeyCode = function(key)
