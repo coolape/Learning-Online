@@ -30,6 +30,9 @@
             crossDomain: true,
             jsonp:'callback',  //Jquery生成验证参数的名称
             success: function(result, status, xhr) { //成功的回调函数,
+                if(NetProtoLearn.afterCallFunc != null) {
+                    NetProtoLearn.afterCallFunc();
+                }
                 if(result == null) {
                     console.log("result nil,cmd=" + params[0]);
                 } else {
@@ -46,9 +49,6 @@
                             }
                         }
                     }
-                }
-                if(NetProtoLearn.afterCallFunc != null) {
-                    NetProtoLearn.afterCallFunc();
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
