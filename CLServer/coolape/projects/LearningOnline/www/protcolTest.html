@@ -31,10 +31,16 @@
 
         function init() {
             console.log("--------test 接口");
-            NetProtoLearn.init("http://127.0.0.1:8810/LearningOnline/get")
+            NetProtoLearn.init("http://127.0.0.1:8810/LearningOnline/get",
+                function () {
+                    console.log("show hot  wheel");
+                },
+                function () {
+                    console.log("hide hot  wheel");
+                });
             NetProtoLearn.send.login(5678, "123", function (result, status, xhr) {
                 console.log(result)
-                if(result.retInfor.code != 1) {
+                if (result.retInfor.code != 1) {
                     console.log(result.retInfor.msg);
                 }
             });

@@ -1,8 +1,16 @@
     var NetProtoLearn = {}; // 网络协议
     NetProtoLearn.__sessionID = 0; // 会话ID
     //==============================
-    NetProtoLearn.init = function(url) {
+    /*
+    * 初始化
+    * url:地址
+    * beforeCallFunc:请求之前的回调
+    * afterCallFunc:请求结束后的回调
+    */
+    NetProtoLearn.init = function(url, beforeCallFunc, afterCallFunc) {
         NetProtoLearn.url = url;
+        NetProtoLearn.beforeCallFunc = beforeCallFunc;
+        NetProtoLearn.afterCallFunc = afterCallFunc;
     };
     /*
     * 跨域调用
@@ -12,6 +20,9 @@
     * error：失败回调，（jqXHR, textStatus, errorThrown）
     */
     NetProtoLearn.call = function ( params, callback) {
+        if(NetProtoLearn.beforeCallFunc != null) {
+            NetProtoLearn.beforeCallFunc();
+        }
         $.ajax({
             url: NetProtoLearn.url,
             data: params,
@@ -19,21 +30,31 @@
             crossDomain: true,
             jsonp:'callback',  //Jquery生成验证参数的名称
             success: function(result, status, xhr) { //成功的回调函数,
-                if(callback != null) {
-                    var cmd = result[0];
-                    if(cmd == undefined || cmd == null) {
-                        console.log("get cmd is nil");
-                        return;
+                if(result == null) {
+                    console.log("result nil,cmd=" + params[0]);
+                } else {
+                    if(callback != null) {
+                        var cmd = result[0];
+                        if(cmd == undefined || cmd == null) {
+                            console.log("get cmd is nil");
+                        } else {
+                            var dispatch = NetProtoLearn.dispatch[cmd];
+                            if(dispatch != null && dispatch != undefined) {
+                                callback(dispatch.onReceive(result), status, xhr);
+                            } else {
+                                console.log("get dispatcher is nil");
+                            }
+                        }
                     }
-                    var dispatch = NetProtoLearn.dispatch[cmd];
-                    if(dispatch != null && dispatch != undefined) {
-                        callback(dispatch.onReceive(result), status, xhr);
-                    } else {
-                        console.log("get dispatcher is nil");
-                    }
+                }
+                if(NetProtoLearn.afterCallFunc != null) {
+                    NetProtoLearn.afterCallFunc();
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
+                if(NetProtoLearn.afterCallFunc != null) {
+                    NetProtoLearn.afterCallFunc();
+                }
                 if(callback != null) {
                     callback(nil, textStatus, jqXHR);
                 }
