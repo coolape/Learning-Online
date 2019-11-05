@@ -17,14 +17,26 @@ local cmd4cust = {}
 cmd4cust.CMD = {
     ---@public 登陆
     login = function(m, fd, agent)
-        ---@type NetProtoLearning.ST_retInfor
+        ---@type NetProtoIsland.ST_retInfor
         local ret = {}
-        ret.code = Errcode.ok
-        ---@type NetProtoLearning.ST_custInfor
-        local custInfor = {}
-        custInfor.idx = 1234567890
+        local custId = tonumber(m.custId)
+        local cust = dbcustomer.instanse(custId)
+        if cust == nil or cust:isEmpty() then
+            ret.code = Errcode.needregist
+            ret.msg = "未注册"
+            return skynet.call(NetProto, "lua", "send", m.cmd, ret, {}, 0, m)
+        end
+        if cust:get_password() ~= m.password then
+            ret.code = Errcode.passwordError
+            ret.msg = "账号或密码错误"
+            return skynet.call(NetProto, "lua", "send", m.cmd, ret, nil, 0, m)
+        end
+        -- 会话id
+        local sessionid = dateEx.nowMS()
 
-        local ret = skynet.call(NetProto, "lua", "send", m.cmd, ret, custInfor, 98754321, m)
+        ret.code = Errcode.ok
+        local ret = skynet.call(NetProto, "lua", "send", m.cmd, ret, cust:value2copy(), sessionid, m)
+        cust.release()
         return ret
     end
 }
