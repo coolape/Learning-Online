@@ -20,18 +20,24 @@
             jsonp:'callback',  //Jquery生成验证参数的名称
             success: function(result, status, xhr) { //成功的回调函数,
                 if(callback != null) {
-                    var cmd = result[0]
-                    var dispatch = NetProtoLearn.dispatch[cmd]
-                    if(dispatch != null) {
-                        callback(dispatch.onReceive(result), status, xhr)
+                    var cmd = result[0];
+                    if(cmd == undefined || cmd == null) {
+                        console.log("get cmd is nil");
+                        return;
+                    }
+                    var dispatch = NetProtoLearn.dispatch[cmd];
+                    if(dispatch != null && dispatch != undefined) {
+                        callback(dispatch.onReceive(result), status, xhr);
+                    } else {
+                        console.log("get dispatcher is nil");
                     }
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 if(callback != null) {
-                    callback(nil, textStatus, jqXHR)
+                    callback(nil, textStatus, jqXHR);
                 }
-                console.log(textStatus + ":" + errorThrown)
+                console.log(textStatus + ":" + errorThrown);
             }
         });
     }
