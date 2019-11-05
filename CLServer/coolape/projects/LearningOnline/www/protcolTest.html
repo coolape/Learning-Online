@@ -31,18 +31,10 @@
 
         function init() {
             console.log("--------test 接口");
-            var params = NetProtoLearn.send.login("uid", "123");
-            myutl.ajaxJSONP("http://127.0.0.1:8810/LearningOnline/get", params,
-                function (result, status, xhr) {
-                    var ret = NetProtoLearn.recive.login(result)
-                    console.log(ret)
-                    console.log(ret.retInfor.code)
-                    console.log(ret.custInfor.idx)
-                    console.log(ret.sessionID)
-                },
-                function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus);
-                })
+            NetProtoLearn.init("http://127.0.0.1:8810/LearningOnline/get")
+            NetProtoLearn.send.login("uid", "123", function (result, status, xhr) {
+                console.log(result)
+            });
         }
 
 

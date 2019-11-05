@@ -92,7 +92,6 @@ function CMD.onrequset(url, method, header, body)
             local cmd = requst["0"] or requst[0]
             requst[0] = tonumber(cmd)
             local result = skynet.call(NetProtoName, "lua", "dispatcher", skynet.self(), requst, nil)
-            printe(json.encode(result))
             local jsoncallback = requst.callback
             if jsoncallback ~= nil then
                 -- 说明ajax调用

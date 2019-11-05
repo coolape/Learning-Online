@@ -1,5 +1,40 @@
     var NetProtoLearn = {}; // 网络协议
     NetProtoLearn.__sessionID = 0; // 会话ID
+    //==============================
+    NetProtoLearn.init = function(url) {
+        NetProtoLearn.url = url;
+    };
+    /*
+    * 跨域调用
+    * url:地址
+    * params：参数
+    * success：成功回调，（result, status, xhr）
+    * error：失败回调，（jqXHR, textStatus, errorThrown）
+    */
+    NetProtoLearn.call = function ( params, callback) {
+        $.ajax({
+            url: NetProtoLearn.url,
+            data: params,
+            dataType: 'jsonp',
+            crossDomain: true,
+            jsonp:'callback',  //Jquery生成验证参数的名称
+            success: function(result, status, xhr) { //成功的回调函数,
+                if(callback != null) {
+                    var cmd = result[0]
+                    var dispatch = NetProtoLearn.dispatch[cmd]
+                    if(dispatch != null) {
+                        callback(dispatch.onReceive(result), status, xhr)
+                    }
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if(callback != null) {
+                    callback(nil, textStatus, jqXHR)
+                }
+                console.log(textStatus + ":" + errorThrown)
+            }
+        });
+    }
     NetProtoLearn.dispatch = {};
     //==============================
     // public toMap
@@ -80,24 +115,24 @@
     //==============================
     NetProtoLearn.send = {
     // 登出
-    logout : function(custId) {
+    logout : function(custId, callback) {
         var ret = {};
         ret[0] = 13;
         ret[1] = NetProtoLearn.__sessionID;
         ret[14] = custId; // 客户名
-        return ret;
+        NetProtoLearn.call(ret, callback);
     },
     // 登陆
-    login : function(custId, password) {
+    login : function(custId, password, callback) {
         var ret = {};
         ret[0] = 15;
         ret[1] = NetProtoLearn.__sessionID;
         ret[14] = custId; // 客户id
         ret[16] = password; // 密码
-        return ret;
+        NetProtoLearn.call(ret, callback);
     },
     // 注册
-    regist : function(custId, password, name, phone, phone2, email, channel, note) {
+    regist : function(custId, password, name, phone, phone2, email, channel, note, callback) {
         var ret = {};
         ret[0] = 17;
         ret[1] = NetProtoLearn.__sessionID;
@@ -109,7 +144,7 @@
         ret[20] = email; // 邮箱
         ret[21] = channel; // 渠道号
         ret[22] = note; // 备注
-        return ret;
+        NetProtoLearn.call(ret, callback);
     },
     };
     //==============================
