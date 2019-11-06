@@ -20,7 +20,7 @@
     * error：失败回调，（jqXHR, textStatus, errorThrown）
     */
     NetProtoLearn.call = function ( params, callback) {
-        if(NetProtoLearn.beforeCallFunc != null) {
+        if(NetProtoLearn.beforeCallFunc) {
             NetProtoLearn.beforeCallFunc();
         }
         $.ajax({
@@ -30,19 +30,19 @@
             crossDomain: true,
             jsonp:'callback',  //Jquery生成验证参数的名称
             success: function(result, status, xhr) { //成功的回调函数,
-                if(NetProtoLearn.afterCallFunc != null) {
+                if(NetProtoLearn.afterCallFunc) {
                     NetProtoLearn.afterCallFunc();
                 }
-                if(result == null) {
+                if(!result) {
                     console.log("result nil,cmd=" + params[0]);
                 } else {
-                    if(callback != null) {
+                    if(callback) {
                         var cmd = result[0];
-                        if(cmd == undefined || cmd == null) {
+                        if(!cmd) {
                             console.log("get cmd is nil");
                         } else {
                             var dispatch = NetProtoLearn.dispatch[cmd];
-                            if(dispatch != null && dispatch != undefined) {
+                            if(!!dispatch) {
                                 callback(dispatch.onReceive(result), status, xhr);
                             } else {
                                 console.log("get dispatcher is nil");
@@ -52,10 +52,10 @@
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                if(NetProtoLearn.afterCallFunc != null) {
+                if(NetProtoLearn.afterCallFunc) {
                     NetProtoLearn.afterCallFunc();
                 }
-                if(callback != null) {
+                if(callback) {
                     callback(nil, textStatus, jqXHR);
                 }
                 console.log(textStatus + ":" + errorThrown);
@@ -67,7 +67,7 @@
     // public toMap
     NetProtoLearn._toMap = function(stuctobj, m) {
         var ret = {};
-        if (m == null) { return ret; }
+        if (!m) { return ret; }
         for(k in m) {
             ret[k] = stuctobj.toMap(m[k]);
         }
@@ -76,7 +76,7 @@
     // public toList
     NetProtoLearn._toList = function(stuctobj, m) {
         var ret = [];
-        if (m == null) { return ret; }
+        if (!m) { return ret; }
         var count = m.length;
         for (var i = 0; i < count; i++) {
             ret.push(stuctobj.toMap(m[i]));
@@ -86,7 +86,7 @@
     // public parse
     NetProtoLearn._parseMap = function(stuctobj, m) {
         var ret = {};
-        if(m == null){ return ret; }
+        if(!m){ return ret; }
         for(k in m) {
             ret[k] = stuctobj.parse(m[k]);
         }
@@ -95,7 +95,7 @@
     // public parse
     NetProtoLearn._parseList = function(stuctobj, m) {
         var ret = [];
-        if(m == null){return ret; }
+        if(!m){return ret; }
         var count = m.length;
         for(var i = 0; i < count; i++) {
             ret.push(stuctobj.parse(m[i]));
@@ -110,14 +110,14 @@
     NetProtoLearn.ST_retInfor = {
         toMap : function(m) {
             var r = {};
-            if(m == null) { return r; }
+            if(!m) { return r; }
             r[10] = m.msg  // 返回消息 string
             r[11] = m.code  // 返回值 int
             return r;
         },
         parse : function(m) {
             var r = {};
-            if(m == null) { return r; }
+            if(!m) { return r; }
             r.msg = m[10] //  string
             r.code = m[11] //  int
             return r;
@@ -125,17 +125,90 @@
     }
     ///@class NetProtoLearn.ST_custInfor 客户信息
     ///@field public idx number 唯一标识
+    ///@field public note string 备注
+    ///@field public phone string 电话
+    ///@field public phone2 string 紧急电话
+    ///@field public email string 邮箱
+    ///@field public users table 用户列表
+    ///@field public name string 名字
+    ///@field public channel string 渠道来源
+    ///@field public groupid number 组id(权限角色管理)
+    ///@field public belongid number 归属老师id
+    ///@field public custid number 账号id
+    ///@field public status number 状态
     NetProtoLearn.ST_custInfor = {
         toMap : function(m) {
             var r = {};
-            if(m == null) { return r; }
+            if(!m) { return r; }
             r[12] = m.idx  // 唯一标识 int
+            r[22] = m.note  // 备注 string
+            r[19] = m.phone  // 电话 string
+            r[25] = m.phone2  // 紧急电话 string
+            r[20] = m.email  // 邮箱 string
+            r[26] = NetProtoLearn._toList(NetProtoLearn.ST_userInfor, m.users)  // 用户列表
+            r[18] = m.name  // 名字 string
+            r[21] = m.channel  // 渠道来源 string
+            r[33] = m.groupid  // 组id(权限角色管理) int
+            r[27] = m.belongid  // 归属老师id int
+            r[28] = m.custid  // 账号id int
+            r[29] = m.status  // 状态 int
             return r;
         },
         parse : function(m) {
             var r = {};
-            if(m == null) { return r; }
+            if(!m) { return r; }
             r.idx = m[12] //  int
+            r.note = m[22] //  string
+            r.phone = m[19] //  string
+            r.phone2 = m[25] //  string
+            r.email = m[20] //  string
+            r.users = NetProtoLearn._parseList(NetProtoLearn.ST_userInfor, m[26])  // 用户列表
+            r.name = m[18] //  string
+            r.channel = m[21] //  string
+            r.groupid = m[33] //  int
+            r.belongid = m[27] //  int
+            r.custid = m[28] //  int
+            r.status = m[29] //  int
+            return r;
+        },
+    }
+    ///@class NetProtoLearn.ST_userInfor 用户信息
+    ///@field public idx number 唯一标识
+    ///@field public note string 备注
+    ///@field public belongid number 归属老师id
+    ///@field public name string 名字
+    ///@field public sex number 性别 0:男, 1:女
+    ///@field public school string 学校
+    ///@field public status number 状态
+    ///@field public custid number 账号id
+    ///@field public birthday string 生日
+    NetProtoLearn.ST_userInfor = {
+        toMap : function(m) {
+            var r = {};
+            if(!m) { return r; }
+            r[12] = m.idx  // 唯一标识 int
+            r[22] = m.note  // 备注 string
+            r[27] = m.belongid  // 归属老师id int
+            r[18] = m.name  // 名字 string
+            r[30] = m.sex  // 性别 0:男, 1:女 int
+            r[31] = m.school  // 学校 string
+            r[29] = m.status  // 状态 int
+            r[28] = m.custid  // 账号id int
+            r[32] = m.birthday  // 生日 string
+            return r;
+        },
+        parse : function(m) {
+            var r = {};
+            if(!m) { return r; }
+            r.idx = m[12] //  int
+            r.note = m[22] //  string
+            r.belongid = m[27] //  int
+            r.name = m[18] //  string
+            r.sex = m[30] //  int
+            r.school = m[31] //  string
+            r.status = m[29] //  int
+            r.custid = m[28] //  int
+            r.birthday = m[32] //  string
             return r;
         },
     }
@@ -159,18 +232,12 @@
         NetProtoLearn.call(ret, callback);
     },
     // 注册
-    regist : function(custId, password, name, phone, phone2, email, channel, note, callback) {
+    regist : function(custInfor, password, callback) {
         var ret = {};
         ret[0] = 17;
         ret[1] = NetProtoLearn.__sessionID;
-        ret[14] = custId; // 客户id
+        ret[23] = NetProtoLearn.ST_custInfor.toMap(custInfor); // 客户信息
         ret[16] = password; // 密码
-        ret[18] = name; // 名字
-        ret[19] = phone; // 电话号码
-        ret[25] = phone2; // 紧急联系电话
-        ret[20] = email; // 邮箱
-        ret[21] = channel; // 渠道号
-        ret[22] = note; // 备注
         NetProtoLearn.call(ret, callback);
     },
     };
