@@ -1,12 +1,8 @@
 ﻿local skynet = require "skynet"
 local socket = require "skynet.socket"
 local urllib = require "http.url"
----@type BioUtl
-local BioUtl = require("BioUtl")
-require("CLGlobal")
+require("public.include")
 ---@type CLUtl
-local CLUtl = require("CLUtl")
-local json = require("json")
 local table = table
 local string = string
 local NetProtoName = skynet.getenv("NetProtoName")
@@ -89,8 +85,7 @@ function CMD.onrequset(url, method, header, body)
         elseif path == httpCMD.httpGet then
             -- 处理统一的get请求
             local requst = urllib.parse_query(query)
-            local cmd = requst["0"] or requst[0]
-            requst[0] = tonumber(cmd)
+            -- Session 的处理
             local result = skynet.call(NetProtoName, "lua", "dispatcher", skynet.self(), requst, nil)
             local jsoncallback = requst.callback
             if jsoncallback ~= nil then

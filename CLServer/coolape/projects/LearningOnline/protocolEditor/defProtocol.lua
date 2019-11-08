@@ -7,6 +7,8 @@ defProtocol.isSendClientInt2bio = false -- 发送给客户端时是否把int转�
 defProtocol.compatibleJsonp = true -- 是否考虑兼容json
 defProtocol.isGenLuaClientFile = false -- 生成lua客户端接口文件
 defProtocol.isGenJsClientFile = true -- 生成js客户端接口文件
+defProtocol.isCheckSession = true -- 生成检测session超时的代码
+defProtocol.donotCheckSessionCMDs = {"login", "regist"} -- 不做session超时检测的接口
 --===================================================
 --===================================================
 --===================================================
@@ -110,15 +112,15 @@ login = {       -- 接口名
 --]]
     regist = {
         desc = "注册", -- 接口说明
-        input = {structs.custInfor, "password"}, -- 入参
-        inputDesc = {"客户信息", "密码"}, -- 入参说明
+        input = {"custid", "password", "name", "phone", "email", "channel", "note"}, -- 入参
+        inputDesc = {"客户id", "密码", "名字", "电话", "邮箱", "来源渠道", "备注"}, -- 入参说明
         output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
         outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
         logic = "cmd4cust"
     },
     login = {
         desc = "登陆", -- 接口说明
-        input = {"custId", "password"}, -- 入参
+        input = {"custid", "password"}, -- 入参
         inputDesc = {"客户id", "密码"}, -- 入参说明
         output = {structs.retInfor, structs.custInfor, "sessionID"}, -- 出参
         outputDesc = {"返回信息", "客户信息", "会话id"}, -- 出参说明
@@ -126,7 +128,7 @@ login = {       -- 接口名
     },
     logout = {
         desc = "登出", -- 接口说明
-        input = {"custId"}, -- 入参
+        input = {"custid"}, -- 入参
         inputDesc = {"客户名"}, -- 入参说明
         output = {structs.retInfor}, -- 出参
         outputDesc = {"返回信息"}, -- 出参说明

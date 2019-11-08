@@ -215,29 +215,34 @@
     //==============================
     NetProtoLearn.send = {
     // 登出
-    logout : function(custId, callback) {
+    logout : function(custid, callback) {
         var ret = {};
         ret[0] = 13;
         ret[1] = NetProtoLearn.__sessionID;
-        ret[14] = custId; // 客户名
+        ret[28] = custid; // 客户名
         NetProtoLearn.call(ret, callback);
     },
     // 登陆
-    login : function(custId, password, callback) {
+    login : function(custid, password, callback) {
         var ret = {};
         ret[0] = 15;
         ret[1] = NetProtoLearn.__sessionID;
-        ret[14] = custId; // 客户id
+        ret[28] = custid; // 客户id
         ret[16] = password; // 密码
         NetProtoLearn.call(ret, callback);
     },
     // 注册
-    regist : function(custInfor, password, callback) {
+    regist : function(custid, password, name, phone, email, channel, note, callback) {
         var ret = {};
         ret[0] = 17;
         ret[1] = NetProtoLearn.__sessionID;
-        ret[23] = NetProtoLearn.ST_custInfor.toMap(custInfor); // 客户信息
+        ret[28] = custid; // 客户id
         ret[16] = password; // 密码
+        ret[18] = name; // 名字
+        ret[19] = phone; // 电话
+        ret[20] = email; // 邮箱
+        ret[21] = channel; // 来源渠道
+        ret[22] = note; // 备注
         NetProtoLearn.call(ret, callback);
     },
     };

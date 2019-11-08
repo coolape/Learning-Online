@@ -160,39 +160,49 @@ do
     NetProtoLearn.recive = {
     -- 登出
     ---@class NetProtoLearn.RC_logout
-    ---@field public custId  客户名
+    ---@field public custid  客户名
     logout = function(map)
         local ret = {}
         ret.cmd = "logout"
         ret.__session__ = map[1] or map["1"]
         ret.callback = map[3]
-        ret.custId = map[14] or map["14"] -- 客户名
+        ret.custid = map[28] or map["28"] -- 客户名
         return ret
     end,
     -- 登陆
     ---@class NetProtoLearn.RC_login
-    ---@field public custId  客户id
+    ---@field public custid  客户id
     ---@field public password  密码
     login = function(map)
         local ret = {}
         ret.cmd = "login"
         ret.__session__ = map[1] or map["1"]
         ret.callback = map[3]
-        ret.custId = map[14] or map["14"] -- 客户id
+        ret.custid = map[28] or map["28"] -- 客户id
         ret.password = map[16] or map["16"] -- 密码
         return ret
     end,
     -- 注册
     ---@class NetProtoLearn.RC_regist
-    ---@field public custInfor NetProtoLearn.ST_custInfor 客户信息
+    ---@field public custid  客户id
     ---@field public password  密码
+    ---@field public name  名字
+    ---@field public phone  电话
+    ---@field public email  邮箱
+    ---@field public channel  来源渠道
+    ---@field public note  备注
     regist = function(map)
         local ret = {}
         ret.cmd = "regist"
         ret.__session__ = map[1] or map["1"]
         ret.callback = map[3]
-        ret.custInfor = NetProtoLearn.ST_custInfor.parse(map[23] or map["23"]) -- 客户信息
+        ret.custid = map[28] or map["28"] -- 客户id
         ret.password = map[16] or map["16"] -- 密码
+        ret.name = map[18] or map["18"] -- 名字
+        ret.phone = map[19] or map["19"] -- 电话
+        ret.email = map[20] or map["20"] -- 邮箱
+        ret.channel = map[21] or map["21"] -- 来源渠道
+        ret.note = map[22] or map["22"] -- 备注
         return ret
     end,
     }
@@ -241,17 +251,30 @@ do
             skynet.error("[dispatcher] map == nil")
             return nil
         end
-        local cmd = map[0]
+        local cmd = map[0] or map["0"]
         if cmd == nil then
             skynet.error("get cmd is nil")
             return nil;
         end
+        cmd = tonumber(cmd)
         local dis = NetProtoLearn.dispatch[cmd]
         if dis == nil then
             skynet.error("get protocol cfg is nil")
             return nil;
         end
         local m = dis.onReceive(map)
+        -- session超时检测
+        if m.cmd ~= NetProtoLearn.cmds.login and m.cmd ~= NetProtoLearn.cmds.regist then
+            local session = m.__session__
+            if not skynet.call("CLSessionMgr", "lua", "VALID", session) then
+                -- 失效
+                local ret = {}
+                ret.code = -10000
+                ret.msg = "session is out of time!"
+                return dis.send(ret)
+             end
+        end
+        -- 执行逻辑处理
         local logicProc = skynet.call(agent, "lua", "getLogic", dis.logicName)
         if logicProc == nil then
             skynet.error("get logicServe is nil. serverName=[" .. dis.loginAccount .."]")
