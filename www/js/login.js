@@ -1,5 +1,4 @@
 document.write('<script src="js/public/load.js" type="text/javascript" ></script>');
-document.write('<script src="js/public/foot.js" type="text/javascript" ></script>');
 document.write('<script src="js/public/ready.js" type="text/javascript" ></script>');
 document.write('<script src="js/option/request.js" type="text/javascript" ></script>');
 function ready(){
@@ -14,12 +13,11 @@ function initHead(){
 function initMidd(){
 	var xml_lg_md = 'xml/login.xml';
 	XMLLoad.loadTxt(xml_lg_md,function(txt){
-		$("#lgc_mid").append(txt);
+		$("#div_content").append(txt);
 	});
 }
 
 function initFoot(){
-	ready_foot("lgc_bot");
 }
 
 function onsubmit_login(){
