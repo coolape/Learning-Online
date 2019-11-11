@@ -92,6 +92,7 @@ CREATE TABLE `customer` (
   `email` varchar(45),
   `channel` varchar(45),
   `belongid` int(11),
+  `groupid` TINYINT,
   `note` TEXT,
   PRIMARY KEY (`idx`, `custid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

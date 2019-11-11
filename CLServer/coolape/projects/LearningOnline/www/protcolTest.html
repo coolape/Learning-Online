@@ -38,12 +38,13 @@
                 function () {
                     console.log("hide hot  wheel");
                 });
-            NetProtoLearn.send.login(5678, "123", function (result, status, xhr) {
-                console.log(result)
-                if (result.retInfor.code != 1) {
-                    console.log(result.retInfor.msg);
-                }
-            });
+            NetProtoLearn.send.regist("chenbin", "123","小张",1303345689,"25@1235.com",0,"",
+                function (result, status, xhr) {
+                    console.log(result)
+                    if (result.retInfor.code != 1) {
+                        console.log(result.retInfor.msg);
+                    }
+                });
         }
 
 

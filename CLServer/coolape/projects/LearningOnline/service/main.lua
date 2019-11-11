@@ -14,6 +14,8 @@ skynet.start(
 
             -- 配制数据
             skynet.uniqueservice("CLCfg")
+            -- session manager
+            skynet.uniqueservice("CLSessionMgr", "keyCoolape2020")
 
             -- 连接mysql
             local mysql = skynet.uniqueservice("CLMySQL")
