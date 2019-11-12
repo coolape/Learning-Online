@@ -3,7 +3,7 @@ local tab = {
     desc = "用户表",
     columns = {
         { "idx", "int(11) NOT NULL", "唯一标识" },
-        { "status", "int(11)", "状态 0:正常;" },
+        { "status", "TINYINT", "状态 0:正常;" },
         { "custid", "int(11) ", "归属的客户id" },
         { "name", "varchar(128) NOT NULL", "名字" },
         { "birthday", "datetime", "生日" },

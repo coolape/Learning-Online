@@ -8,7 +8,7 @@ local tab = {
         { "name", "varchar(128) NOT NULL", "客户名字" },
         { "crtTime", "datetime", "创建时间" },
         { "lastEnTime", "datetime", "最后登陆时间" },
-        { "status", "int(11)", "状态 0:正常;" },
+        { "status", "TINYINT", "状态 0:正常;" },
         { "phone", "varchar(45)", "电话" },
         { "phone2", "varchar(45)", "紧急电话" },
         { "email", "varchar(45)", "邮箱" },

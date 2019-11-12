@@ -16,7 +16,6 @@ cmd4cust.CMD = {
     regist = function(m, fd, agent)
         ---@type NetProtoLearn.ST_retInfor
         local ret = {}
-        print(CLUtl.dump(m))
         local custId = m.custid
         if
             CLUtl.isNilOrEmpty(custId) or CLUtl.isNilOrEmpty(m.password) or CLUtl.isNilOrEmpty(m.name) or
