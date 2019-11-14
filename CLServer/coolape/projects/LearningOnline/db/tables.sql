@@ -77,6 +77,36 @@ DELIMITER ;
 #----------------------------------------------
         
 #----------------------------------------------------
+#---- 课件配置表
+DROP TABLE IF EXISTS `cfgcourse`;
+CREATE TABLE `cfgcourse` (
+  `idx` int(11) NOT NULL,
+  `subjectidx` int(4) NOT NULL,
+  `status` TINYINT,
+  `name` varchar(512) NOT NULL,
+  `ppt` varchar(512),
+  `pptpath` varchar(512),
+  `res` varchar(512),
+  `respath` varchar(512),
+  `exercises_json` TEXT,
+  `note` TEXT,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+#----------------------------------------------------
+#---- 课程配置表
+DROP TABLE IF EXISTS `cfgsubject`;
+CREATE TABLE `cfgsubject` (
+  `idx` int(11) NOT NULL,
+  `status` TINYINT,
+  `gid` int(4) NOT NULL,
+  `gid2` int(4) NOT NULL,
+  `gid3` int(4) NOT NULL,
+  `name` varchar(512) NOT NULL,
+  `price` int(11) NOT NULL,
+  `note` TEXT,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+#----------------------------------------------------
 #---- 客户表
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
@@ -86,7 +116,7 @@ CREATE TABLE `customer` (
   `name` varchar(128) NOT NULL,
   `crtTime` datetime,
   `lastEnTime` datetime,
-  `status` int(11),
+  `status` TINYINT,
   `phone` varchar(45),
   `phone2` varchar(45),
   `email` varchar(45),
@@ -101,13 +131,14 @@ CREATE TABLE `customer` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `idx` int(11) NOT NULL,
-  `status` int(11),
+  `status` TINYINT,
   `custid` int(11) ,
   `name` varchar(128) NOT NULL,
   `birthday` datetime,
   `sex` TINYINT,
   `school` varchar(256),
   `belongid` int(11),
+  `crtTime` datetime,
   `note` TEXT,
   PRIMARY KEY (`idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

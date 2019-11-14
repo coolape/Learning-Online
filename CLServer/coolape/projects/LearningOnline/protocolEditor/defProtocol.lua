@@ -133,6 +133,30 @@ login = {       -- 接口名
         output = {structs.retInfor}, -- 出参
         outputDesc = {"返回信息"}, -- 出参说明
         logic = "cmd4cust"
+    },
+    addUser = {
+        desc = "添加用户", -- 接口说明
+        input = {"custid", "name", "birthday", "sex", "school"}, -- 入参
+        inputDesc = {"客户id", "姓名", "生日", "性别 0:男, 1:女", "学校(可选)"}, -- 入参说明
+        output = {structs.retInfor, structs.userInfor}, -- 出参
+        outputDesc = {"返回信息", "用户信息"}, -- 出参说明
+        logic = "cmd4user"
+    },
+    delUser = {
+        desc = "删除用户", -- 接口说明
+        input = {"idx"}, -- 入参
+        inputDesc = {"用户id"}, -- 入参说明
+        output = {structs.retInfor}, -- 出参
+        outputDesc = {"返回信息"}, -- 出参说明
+        logic = "cmd4user"
+    },
+    bandingUser = {
+        desc = "分配用户给教师", -- 接口说明
+        input = {"uidx", "cidx"}, -- 入参
+        inputDesc = {"用户id", "教师id(客户id)"}, -- 入参说明
+        output = {structs.retInfor}, -- 出参
+        outputDesc = {"返回信息"}, -- 出参说明
+        logic = "cmd4user"
     }
 }
 

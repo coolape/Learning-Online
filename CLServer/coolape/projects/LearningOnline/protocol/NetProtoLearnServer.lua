@@ -77,9 +77,9 @@ do
     ---@field public name string 名字
     ---@field public channel string 渠道来源
     ---@field public groupid number 组id(权限角色管理)
-    ---@field public belongid number 归属老师id
-    ---@field public custid number 账号id
     ---@field public status number 状态
+    ---@field public custid number 账号id
+    ---@field public belongid number 归属老师id
     NetProtoLearn.ST_custInfor = {
         toMap = function(m)
             local r = {}
@@ -93,9 +93,9 @@ do
             r[18] = m.name  -- 名字 string
             r[21] = m.channel  -- 渠道来源 string
             r[33] = m.groupid  -- 组id(权限角色管理) int
-            r[27] = m.belongid  -- 归属老师id int
-            r[28] = m.custid  -- 账号id int
             r[29] = m.status  -- 状态 int
+            r[28] = m.custid  -- 账号id int
+            r[27] = m.belongid  -- 归属老师id int
             return r;
         end,
         parse = function(m)
@@ -110,9 +110,9 @@ do
             r.name = m[18] or m["18"] --  string
             r.channel = m[21] or m["21"] --  string
             r.groupid = m[33] or m["33"] --  int
-            r.belongid = m[27] or m["27"] --  int
-            r.custid = m[28] or m["28"] --  int
             r.status = m[29] or m["29"] --  int
+            r.custid = m[28] or m["28"] --  int
+            r.belongid = m[27] or m["27"] --  int
             return r;
         end,
     }
@@ -158,15 +158,15 @@ do
     }
     --==============================
     NetProtoLearn.recive = {
-    -- 登出
-    ---@class NetProtoLearn.RC_logout
-    ---@field public custid  客户名
-    logout = function(map)
+    -- 删除用户
+    ---@class NetProtoLearn.RC_delUser
+    ---@field public idx  用户id
+    delUser = function(map)
         local ret = {}
-        ret.cmd = "logout"
+        ret.cmd = "delUser"
         ret.__session__ = map[1] or map["1"]
         ret.callback = map[3]
-        ret.custid = map[28] or map["28"] -- 客户名
+        ret.idx = map[12] or map["12"] -- 用户id
         return ret
     end,
     -- 登陆
@@ -205,12 +205,55 @@ do
         ret.note = map[22] or map["22"] -- 备注
         return ret
     end,
+    -- 登出
+    ---@class NetProtoLearn.RC_logout
+    ---@field public custid  客户名
+    logout = function(map)
+        local ret = {}
+        ret.cmd = "logout"
+        ret.__session__ = map[1] or map["1"]
+        ret.callback = map[3]
+        ret.custid = map[28] or map["28"] -- 客户名
+        return ret
+    end,
+    -- 添加用户
+    ---@class NetProtoLearn.RC_addUser
+    ---@field public custid  客户id
+    ---@field public name  姓名
+    ---@field public birthday  生日
+    ---@field public sex  性别 0:男, 1:女
+    ---@field public school  学校(可选)
+    addUser = function(map)
+        local ret = {}
+        ret.cmd = "addUser"
+        ret.__session__ = map[1] or map["1"]
+        ret.callback = map[3]
+        ret.custid = map[28] or map["28"] -- 客户id
+        ret.name = map[18] or map["18"] -- 姓名
+        ret.birthday = map[32] or map["32"] -- 生日
+        ret.sex = map[30] or map["30"] -- 性别 0:男, 1:女
+        ret.school = map[31] or map["31"] -- 学校(可选)
+        return ret
+    end,
+    -- 分配用户给教师
+    ---@class NetProtoLearn.RC_bandingUser
+    ---@field public uidx  用户id
+    ---@field public cidx  教师id(客户id)
+    bandingUser = function(map)
+        local ret = {}
+        ret.cmd = "bandingUser"
+        ret.__session__ = map[1] or map["1"]
+        ret.callback = map[3]
+        ret.uidx = map[38] or map["38"] -- 用户id
+        ret.cidx = map[39] or map["39"] -- 教师id(客户id)
+        return ret
+    end,
     }
     --==============================
     NetProtoLearn.send = {
-    logout = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
+    delUser = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
         local ret = {}
-        ret[0] = 13
+        ret[0] = 34
         ret[3] = mapOrig and mapOrig.callback or nil
         ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
         return ret
@@ -233,16 +276,44 @@ do
         ret[24] = sessionID; -- 会话id
         return ret
     end,
+    logout = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
+        local ret = {}
+        ret[0] = 13
+        ret[3] = mapOrig and mapOrig.callback or nil
+        ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
+        return ret
+    end,
+    addUser = function(retInfor, userInfor, mapOrig) -- mapOrig:客户端原始入参
+        local ret = {}
+        ret[0] = 35
+        ret[3] = mapOrig and mapOrig.callback or nil
+        ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
+        ret[36] = NetProtoLearn.ST_userInfor.toMap(userInfor); -- 用户信息
+        return ret
+    end,
+    bandingUser = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
+        local ret = {}
+        ret[0] = 37
+        ret[3] = mapOrig and mapOrig.callback or nil
+        ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
+        return ret
+    end,
     }
     --==============================
-    NetProtoLearn.dispatch[13]={onReceive = NetProtoLearn.recive.logout, send = NetProtoLearn.send.logout, logicName = "cmd4cust"}
+    NetProtoLearn.dispatch[34]={onReceive = NetProtoLearn.recive.delUser, send = NetProtoLearn.send.delUser, logicName = "cmd4user"}
     NetProtoLearn.dispatch[15]={onReceive = NetProtoLearn.recive.login, send = NetProtoLearn.send.login, logicName = "cmd4cust"}
     NetProtoLearn.dispatch[17]={onReceive = NetProtoLearn.recive.regist, send = NetProtoLearn.send.regist, logicName = "cmd4cust"}
+    NetProtoLearn.dispatch[13]={onReceive = NetProtoLearn.recive.logout, send = NetProtoLearn.send.logout, logicName = "cmd4cust"}
+    NetProtoLearn.dispatch[35]={onReceive = NetProtoLearn.recive.addUser, send = NetProtoLearn.send.addUser, logicName = "cmd4user"}
+    NetProtoLearn.dispatch[37]={onReceive = NetProtoLearn.recive.bandingUser, send = NetProtoLearn.send.bandingUser, logicName = "cmd4user"}
     --==============================
     NetProtoLearn.cmds = {
-        logout = "logout", -- 登出,
+        delUser = "delUser", -- 删除用户,
         login = "login", -- 登陆,
-        regist = "regist", -- 注册
+        regist = "regist", -- 注册,
+        logout = "logout", -- 登出,
+        addUser = "addUser", -- 添加用户,
+        bandingUser = "bandingUser", -- 分配用户给教师
     }
 
     --==============================

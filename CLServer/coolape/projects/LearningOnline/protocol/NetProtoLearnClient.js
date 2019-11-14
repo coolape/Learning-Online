@@ -133,9 +133,9 @@
     ///@field public name string 名字
     ///@field public channel string 渠道来源
     ///@field public groupid number 组id(权限角色管理)
-    ///@field public belongid number 归属老师id
-    ///@field public custid number 账号id
     ///@field public status number 状态
+    ///@field public custid number 账号id
+    ///@field public belongid number 归属老师id
     NetProtoLearn.ST_custInfor = {
         toMap : function(m) {
             var r = {};
@@ -149,9 +149,9 @@
             r[18] = m.name  // 名字 string
             r[21] = m.channel  // 渠道来源 string
             r[33] = m.groupid  // 组id(权限角色管理) int
-            r[27] = m.belongid  // 归属老师id int
-            r[28] = m.custid  // 账号id int
             r[29] = m.status  // 状态 int
+            r[28] = m.custid  // 账号id int
+            r[27] = m.belongid  // 归属老师id int
             return r;
         },
         parse : function(m) {
@@ -166,9 +166,9 @@
             r.name = m[18] //  string
             r.channel = m[21] //  string
             r.groupid = m[33] //  int
-            r.belongid = m[27] //  int
-            r.custid = m[28] //  int
             r.status = m[29] //  int
+            r.custid = m[28] //  int
+            r.belongid = m[27] //  int
             return r;
         },
     }
@@ -214,12 +214,12 @@
     }
     //==============================
     NetProtoLearn.send = {
-    // 登出
-    logout : function(custid, callback) {
+    // 删除用户
+    delUser : function(idx, callback) {
         var ret = {};
-        ret[0] = 13;
+        ret[0] = 34;
         ret[1] = NetProtoLearn.__sessionID;
-        ret[28] = custid; // 客户名
+        ret[12] = idx; // 用户id
         NetProtoLearn.call(ret, callback);
     },
     // 登陆
@@ -245,14 +245,43 @@
         ret[22] = note; // 备注
         NetProtoLearn.call(ret, callback);
     },
+    // 登出
+    logout : function(custid, callback) {
+        var ret = {};
+        ret[0] = 13;
+        ret[1] = NetProtoLearn.__sessionID;
+        ret[28] = custid; // 客户名
+        NetProtoLearn.call(ret, callback);
+    },
+    // 添加用户
+    addUser : function(custid, name, birthday, sex, school, callback) {
+        var ret = {};
+        ret[0] = 35;
+        ret[1] = NetProtoLearn.__sessionID;
+        ret[28] = custid; // 客户id
+        ret[18] = name; // 姓名
+        ret[32] = birthday; // 生日
+        ret[30] = sex; // 性别 0:男, 1:女
+        ret[31] = school; // 学校(可选)
+        NetProtoLearn.call(ret, callback);
+    },
+    // 分配用户给教师
+    bandingUser : function(uidx, cidx, callback) {
+        var ret = {};
+        ret[0] = 37;
+        ret[1] = NetProtoLearn.__sessionID;
+        ret[38] = uidx; // 用户id
+        ret[39] = cidx; // 教师id(客户id)
+        NetProtoLearn.call(ret, callback);
+    },
     };
     //==============================
     NetProtoLearn.recive = {
-    ///@class NetProtoLearn.RC_logout
+    ///@class NetProtoLearn.RC_delUser
     ///@field public retInfor NetProtoLearn.ST_retInfor 返回信息
-    logout : function(map) {
+    delUser : function(map) {
         var ret = {};
-        ret.cmd = "logout";
+        ret.cmd = "delUser";
         ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
         return ret;
     },
@@ -280,15 +309,47 @@
         ret.sessionID = map[24] // 会话id
         return ret;
     },
+    ///@class NetProtoLearn.RC_logout
+    ///@field public retInfor NetProtoLearn.ST_retInfor 返回信息
+    logout : function(map) {
+        var ret = {};
+        ret.cmd = "logout";
+        ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
+        return ret;
+    },
+    ///@class NetProtoLearn.RC_addUser
+    ///@field public retInfor NetProtoLearn.ST_retInfor 返回信息
+    ///@field public userInfor NetProtoLearn.ST_userInfor 用户信息
+    addUser : function(map) {
+        var ret = {};
+        ret.cmd = "addUser";
+        ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
+        ret.userInfor = NetProtoLearn.ST_userInfor.parse(map[36]) // 用户信息
+        return ret;
+    },
+    ///@class NetProtoLearn.RC_bandingUser
+    ///@field public retInfor NetProtoLearn.ST_retInfor 返回信息
+    bandingUser : function(map) {
+        var ret = {};
+        ret.cmd = "bandingUser";
+        ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
+        return ret;
+    },
     };
     //==============================
-    NetProtoLearn.dispatch[13]={onReceive : NetProtoLearn.recive.logout, send : NetProtoLearn.send.logout}
+    NetProtoLearn.dispatch[34]={onReceive : NetProtoLearn.recive.delUser, send : NetProtoLearn.send.delUser}
     NetProtoLearn.dispatch[15]={onReceive : NetProtoLearn.recive.login, send : NetProtoLearn.send.login}
     NetProtoLearn.dispatch[17]={onReceive : NetProtoLearn.recive.regist, send : NetProtoLearn.send.regist}
+    NetProtoLearn.dispatch[13]={onReceive : NetProtoLearn.recive.logout, send : NetProtoLearn.send.logout}
+    NetProtoLearn.dispatch[35]={onReceive : NetProtoLearn.recive.addUser, send : NetProtoLearn.send.addUser}
+    NetProtoLearn.dispatch[37]={onReceive : NetProtoLearn.recive.bandingUser, send : NetProtoLearn.send.bandingUser}
     //==============================
     NetProtoLearn.cmds = {
-        logout : "logout", // 登出,
+        delUser : "delUser", // 删除用户,
         login : "login", // 登陆,
-        regist : "regist", // 注册
+        regist : "regist", // 注册,
+        logout : "logout", // 登出,
+        addUser : "addUser", // 添加用户,
+        bandingUser : "bandingUser", // 分配用户给教师
     }
     //==============================

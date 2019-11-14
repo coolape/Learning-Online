@@ -45,10 +45,10 @@ cmd4cust.CMD = {
         local sessionid = skynet.call("CLSessionMgr", "lua", "SET", cust:get_custid())
 
         ret.code = Errcode.ok
-        local ret = skynet.call(NetProto, "lua", "send", m.cmd, ret, cust:value2copy(), sessionid, m)
+        local retsult = skynet.call(NetProto, "lua", "send", m.cmd, ret, cust:value2copy(), sessionid, m)
         -- 注意要释放
         cust:release()
-        return ret
+        return retsult
     end,
     ---@public 登陆
     ---@param m NetProtoLearn.RC_login
@@ -71,7 +71,8 @@ cmd4cust.CMD = {
         end
         -- 会话id
         local sessionid = skynet.call("CLSessionMgr", "lua", "SET", cust:get_custid())
-
+        -- 更新最后登陆时间
+        cust:set_lastEnTime(dateEx.nowMS())
         -- 取得用户列表（取得学生）
         local users = dbuser.getListBycustid(cust.get_custid())
         ---@type NetProtoLearn.ST_custInfor
@@ -79,10 +80,10 @@ cmd4cust.CMD = {
         custInfor.users = users
 
         ret.code = Errcode.ok
-        local ret = skynet.call(NetProto, "lua", "send", m.cmd, ret, custInfor, sessionid, m)
+        local result = skynet.call(NetProto, "lua", "send", m.cmd, ret, custInfor, sessionid, m)
         -- 注意要释放
         cust:release()
-        return ret
+        return result
     end,
     ---@public 退出
     ---@param m NetProtoLearn.RC_logout
