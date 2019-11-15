@@ -28,6 +28,39 @@ cmd4user.CMD = {
         local result = skynet.call(NetProto, "lua", "send", m.cmd, ret, user:value2copy())
         user:release()
         return result
+    end,
+    ---@param m NetProtoLearn.RC_delUser
+    delUser = function(m, fd)
+        local user = dbuser.instanse(m.idx)
+        if not user:isEmpty() then
+            user:delete()
+        end
+        ---@type NetProtoLearn.ST_retInfor
+        local ret = {}
+        ret.code = Errcode.ok
+        return skynet.call(NetProto, "lua", "send", m.cmd, ret)
+    end,
+    ---@param m NetProtoLearn.RC_bandingUser
+    bandingUser = function(m, fd)
+        ---@type NetProtoLearn.ST_retInfor
+        local ret = {}
+        local user = dbuser.instanse(m.uidx)
+        if user:isEmpty() then
+            ret.code = Errcode.userIsNil
+            ret.msg = "取得用户为空"
+            return skynet.call(NetProto, "lua", "send", m.cmd, ret)
+        end
+        local cust = dbcustomer.instanse(m.cidx)
+        if cust:isEmpty() then
+            ret.code = Errcode.custIsNil
+            ret.msg = "取得客户为空"
+            return skynet.call(NetProto, "lua", "send", m.cmd, ret)
+        end
+        user:set_belongid(tonumber(m.cidx))
+        user:release()
+        cust:release()
+        ret.code = Errcode.ok
+        return skynet.call(NetProto, "lua", "send", m.cmd, ret)
     end
 }
 

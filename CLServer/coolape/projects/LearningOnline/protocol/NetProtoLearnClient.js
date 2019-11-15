@@ -129,11 +129,11 @@
     ///@field public phone string 电话
     ///@field public phone2 string 紧急电话
     ///@field public email string 邮箱
-    ///@field public users table 用户列表
+    ///@field public status number 状态
     ///@field public name string 名字
     ///@field public channel string 渠道来源
-    ///@field public groupid number 组id(权限角色管理)
-    ///@field public status number 状态
+    ///@field public users table 用户列表
+    ///@field public groupid number 组id 1:家长,2:销售,3:教师,100:管理员
     ///@field public custid number 账号id
     ///@field public belongid number 归属老师id
     NetProtoLearn.ST_custInfor = {
@@ -145,11 +145,11 @@
             r[19] = m.phone  // 电话 string
             r[25] = m.phone2  // 紧急电话 string
             r[20] = m.email  // 邮箱 string
-            r[26] = NetProtoLearn._toList(NetProtoLearn.ST_userInfor, m.users)  // 用户列表
+            r[29] = m.status  // 状态 int
             r[18] = m.name  // 名字 string
             r[21] = m.channel  // 渠道来源 string
-            r[33] = m.groupid  // 组id(权限角色管理) int
-            r[29] = m.status  // 状态 int
+            r[26] = NetProtoLearn._toList(NetProtoLearn.ST_userInfor, m.users)  // 用户列表
+            r[33] = m.groupid  // 组id 1:家长,2:销售,3:教师,100:管理员 int
             r[28] = m.custid  // 账号id int
             r[27] = m.belongid  // 归属老师id int
             return r;
@@ -162,11 +162,11 @@
             r.phone = m[19] //  string
             r.phone2 = m[25] //  string
             r.email = m[20] //  string
-            r.users = NetProtoLearn._parseList(NetProtoLearn.ST_userInfor, m[26])  // 用户列表
+            r.status = m[29] //  int
             r.name = m[18] //  string
             r.channel = m[21] //  string
+            r.users = NetProtoLearn._parseList(NetProtoLearn.ST_userInfor, m[26])  // 用户列表
             r.groupid = m[33] //  int
-            r.status = m[29] //  int
             r.custid = m[28] //  int
             r.belongid = m[27] //  int
             return r;
@@ -175,11 +175,11 @@
     ///@class NetProtoLearn.ST_userInfor 用户信息
     ///@field public idx number 唯一标识
     ///@field public note string 备注
-    ///@field public belongid number 归属老师id
+    ///@field public status number 状态
     ///@field public name string 名字
     ///@field public sex number 性别 0:男, 1:女
     ///@field public school string 学校
-    ///@field public status number 状态
+    ///@field public belongid number 归属老师id
     ///@field public custid number 账号id
     ///@field public birthday string 生日
     NetProtoLearn.ST_userInfor = {
@@ -188,11 +188,11 @@
             if(!m) { return r; }
             r[12] = m.idx  // 唯一标识 int
             r[22] = m.note  // 备注 string
-            r[27] = m.belongid  // 归属老师id int
+            r[29] = m.status  // 状态 int
             r[18] = m.name  // 名字 string
             r[30] = m.sex  // 性别 0:男, 1:女 int
             r[31] = m.school  // 学校 string
-            r[29] = m.status  // 状态 int
+            r[27] = m.belongid  // 归属老师id int
             r[28] = m.custid  // 账号id int
             r[32] = m.birthday  // 生日 string
             return r;
@@ -202,11 +202,11 @@
             if(!m) { return r; }
             r.idx = m[12] //  int
             r.note = m[22] //  string
-            r.belongid = m[27] //  int
+            r.status = m[29] //  int
             r.name = m[18] //  string
             r.sex = m[30] //  int
             r.school = m[31] //  string
-            r.status = m[29] //  int
+            r.belongid = m[27] //  int
             r.custid = m[28] //  int
             r.birthday = m[32] //  string
             return r;

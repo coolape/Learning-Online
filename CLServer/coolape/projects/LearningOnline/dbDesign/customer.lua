@@ -14,7 +14,7 @@ local tab = {
         { "email", "varchar(45)", "邮箱" },
         { "channel", "varchar(45)", "渠道来源" },
         { "belongid", "int(11)", "归属老师id" },
-        { "groupid", "TINYINT", "组id(权限角色管理)" },
+        { "groupid", "TINYINT", "组id(权限角色管理), 1:家长,2:销售,3:教师,100:管理员" },
         { "note", "TEXT", "备注" },
     },
     primaryKey = {

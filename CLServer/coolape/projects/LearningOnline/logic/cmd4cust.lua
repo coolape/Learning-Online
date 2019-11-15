@@ -39,6 +39,7 @@ cmd4cust.CMD = {
         m[dbcustomer.keys.crtTime] = dateEx.nowMS()
         m[dbcustomer.keys.lastEnTime] = dateEx.nowMS()
         m[dbcustomer.keys.status] = 0
+        m[dbcustomer.keys.groupid] = 1
         cust:init(m, true)
 
         -- 会话id

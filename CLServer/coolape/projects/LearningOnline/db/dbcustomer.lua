@@ -38,7 +38,7 @@ dbcustomer.keys = {
     email = "email", -- 邮箱
     channel = "channel", -- 渠道来源
     belongid = "belongid", -- 归属老师id
-    groupid = "groupid", -- 组id(权限角色管理)
+    groupid = "groupid", -- 组id(权限角色管理), 1:家长,2:销售,3:教师,100:管理员
     note = "note", -- 备注
 }
 
@@ -302,7 +302,7 @@ function dbcustomer:get_belongid()
 end
 
 function dbcustomer:set_groupid(v)
-    -- 组id(权限角色管理)
+    -- 组id(权限角色管理), 1:家长,2:销售,3:教师,100:管理员
     if self:isEmpty() then
         skynet.error("[dbcustomer:set_groupid],please init first!!")
         return nil
@@ -311,7 +311,7 @@ function dbcustomer:set_groupid(v)
     skynet.call("CLDB", "lua", "set", self.__name__, self.__key__, "groupid", v)
 end
 function dbcustomer:get_groupid()
-    -- 组id(权限角色管理)
+    -- 组id(权限角色管理), 1:家长,2:销售,3:教师,100:管理员
     local val = skynet.call("CLDB", "lua", "get", self.__name__, self.__key__, "groupid")
     return (tonumber(val) or 0)
 end

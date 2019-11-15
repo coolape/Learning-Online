@@ -85,7 +85,7 @@ defProtocol.structs.custInfor = {
         email = {"", "邮箱"},
         channel = {"", "渠道来源"},
         belongid = {0, "归属老师id"},
-        groupid = {0, "组id(权限角色管理)"},
+        groupid = {0, "组id 1:家长,2:销售,3:教师,100:管理员"},
         note = {"", "备注"},
         users = {{defProtocol.structs.userInfor, defProtocol.structs.userInfor}, "用户列表"}
     }
