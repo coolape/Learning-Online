@@ -7,8 +7,8 @@ function ready(){
 
 function onsubmit_login(){
 	var r = false;
-	var lgid = $("#login_id");
-	var lgpd = $("#login_pwd");
+	var lgid = $("#inputEmail");
+	var lgpd = $("#inputPassword");
 	var lgidval = lgid.val();
 	var lgpdval = lgpd.val();
 	if(lgidval.length > 0 && lgpdval.length >0){
@@ -17,8 +17,8 @@ function onsubmit_login(){
 	return r;
 }
 function cancel_login(){
-	var lgid = $("#login_id");
-	var lgpd = $("#login_pwd");
+	var lgid = $("#inputEmail");
+	var lgpd = $("#inputPassword");
 	lgid.val("");
 	lgpd.val("");
 }
