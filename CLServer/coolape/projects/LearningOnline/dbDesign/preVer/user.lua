@@ -4,7 +4,7 @@ local tab = {
     columns = {
         { "idx", "int(11) NOT NULL", "唯一标识" },
         { "status", "TINYINT", "状态 0:正常;" },
-        { "custid", "int(11) ", "归属的客户id" },
+        { "custid", "varchar(45) ", "归属的客户id" },
         { "name", "varchar(128) NOT NULL", "名字" },
         { "birthday", "datetime", "生日" },
         { "sex", "TINYINT", "性别 0:男, 1:女" },

@@ -132,7 +132,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `idx` int(11) NOT NULL,
   `status` TINYINT,
-  `custid` int(11) ,
+  `custid` varchar(45) ,
   `name` varchar(128) NOT NULL,
   `birthday` datetime,
   `sex` TINYINT,

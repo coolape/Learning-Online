@@ -56,10 +56,9 @@ cmd4cust.CMD = {
     login = function(m, fd, agent)
         ---@type NetProtoLearn.ST_retInfor
         local ret = {}
-        local custId = tonumber(m.custId)
-
+        local custid = m.custid
         ---@type dbcustomer
-        local cust = dbcustomer.instanse(custId)
+        local cust = dbcustomer.instanse(custid)
         if cust == nil or cust:isEmpty() then
             ret.code = Errcode.needregist
             ret.msg = "未注册"
@@ -75,7 +74,7 @@ cmd4cust.CMD = {
         -- 更新最后登陆时间
         cust:set_lastEnTime(dateEx.nowMS())
         -- 取得用户列表（取得学生）
-        local users = dbuser.getListBycustid(cust.get_custid())
+        local users = dbuser.getListBycustid(cust:get_custid())
         ---@type NetProtoLearn.ST_custInfor
         local custInfor = cust:value2copy()
         custInfor.users = users

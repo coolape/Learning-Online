@@ -148,13 +148,12 @@ function dbuser:set_custid(v)
         skynet.error("[dbuser:set_custid],please init first!!")
         return nil
     end
-    v = tonumber(v) or 0
+    v = v or ""
     skynet.call("CLDB", "lua", "set", self.__name__, self.__key__, "custid", v)
 end
 function dbuser:get_custid()
     -- 归属的客户id
-    local val = skynet.call("CLDB", "lua", "get", self.__name__, self.__key__, "custid")
-    return (tonumber(val) or 0)
+    return skynet.call("CLDB", "lua", "get", self.__name__, self.__key__, "custid")
 end
 
 function dbuser:set_name(v)
@@ -349,7 +348,7 @@ function dbuser.getListBycustid(custid, forceSelect, orderby, limitOffset, limit
             data:release()
         end
     else
-        local sql = "SELECT * FROM user WHERE custid=" .. custid ..  (orderby and " ORDER BY" ..  orderby or "") .. ((limitOffset and limitNum) and (" LIMIT " ..  limitOffset .. "," .. limitNum) or "") .. ";"
+        local sql = "SELECT * FROM user WHERE custid=" .. "'" .. custid .. "'" ..  (orderby and " ORDER BY" ..  orderby or "") .. ((limitOffset and limitNum) and (" LIMIT " ..  limitOffset .. "," .. limitNum) or "") .. ";"
         list = skynet.call("CLMySQL", "lua", "exesql", sql)
         if list and list.errno then
             skynet.error("[dbuser.getGroup] sql error==" .. sql)
@@ -440,9 +439,6 @@ function dbuser.validData(data)
     end
     if type(data.status) ~= "number" then
         data.status = tonumber(data.status) or 0
-    end
-    if type(data.custid) ~= "number" then
-        data.custid = tonumber(data.custid) or 0
     end
     if type(data.birthday) == "number" then
         data.birthday = dateEx.seconds2Str(data.birthday/1000)
