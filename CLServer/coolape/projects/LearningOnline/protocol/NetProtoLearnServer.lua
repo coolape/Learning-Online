@@ -116,6 +116,43 @@ do
             return r;
         end,
     }
+    ---@class NetProtoLearn.ST_cfgSubject 课程/科目配置
+    ---@field public idx number 唯一标识
+    ---@field public note string 备注
+    ---@field public gid2 number 分类id二
+    ---@field public gid number 分类id一
+    ---@field public status number 状态 0:正常;1:废除
+    ---@field public price number 价格
+    ---@field public name string 名字
+    ---@field public gid3 number 分类id三
+    NetProtoLearn.ST_cfgSubject = {
+        toMap = function(m)
+            local r = {}
+            if m == nil then return r end
+            r[12] = m.idx  -- 唯一标识 int
+            r[22] = m.note  -- 备注 string
+            r[40] = m.gid2  -- 分类id二 int
+            r[43] = m.gid  -- 分类id一 int
+            r[29] = m.status  -- 状态 0:正常;1:废除 int
+            r[41] = m.price  -- 价格 int
+            r[18] = m.name  -- 名字 string
+            r[42] = m.gid3  -- 分类id三 int
+            return r;
+        end,
+        parse = function(m)
+            local r = {}
+            if m == nil then return r end
+            r.idx = m[12] or m["12"] --  int
+            r.note = m[22] or m["22"] --  string
+            r.gid2 = m[40] or m["40"] --  int
+            r.gid = m[43] or m["43"] --  int
+            r.status = m[29] or m["29"] --  int
+            r.price = m[41] or m["41"] --  int
+            r.name = m[18] or m["18"] --  string
+            r.gid3 = m[42] or m["42"] --  int
+            return r;
+        end,
+    }
     ---@class NetProtoLearn.ST_userInfor 用户信息
     ---@field public idx number 唯一标识
     ---@field public note string 备注
@@ -169,6 +206,27 @@ do
         ret.idx = map[12] or map["12"] -- 用户id
         return ret
     end,
+    -- 配置课程
+    ---@class NetProtoLearn.RC_configSubject
+    ---@field public name  名字
+    ---@field public gid  分类id一
+    ---@field public gid2  分类id二
+    ---@field public gid3  分类id三
+    ---@field public price  价格
+    ---@field public note  备注
+    configSubject = function(map)
+        local ret = {}
+        ret.cmd = "configSubject"
+        ret.__session__ = map[1] or map["1"]
+        ret.callback = map[3]
+        ret.name = map[18] or map["18"] -- 名字
+        ret.gid = map[43] or map["43"] -- 分类id一
+        ret.gid2 = map[40] or map["40"] -- 分类id二
+        ret.gid3 = map[42] or map["42"] -- 分类id三
+        ret.price = map[41] or map["41"] -- 价格
+        ret.note = map[22] or map["22"] -- 备注
+        return ret
+    end,
     -- 登陆
     ---@class NetProtoLearn.RC_login
     ---@field public custid  客户id
@@ -203,6 +261,15 @@ do
         ret.email = map[20] or map["20"] -- 邮箱
         ret.channel = map[21] or map["21"] -- 来源渠道
         ret.note = map[22] or map["22"] -- 备注
+        return ret
+    end,
+    -- 配置课件
+    ---@class NetProtoLearn.RC_configCourse
+    configCourse = function(map)
+        local ret = {}
+        ret.cmd = "configCourse"
+        ret.__session__ = map[1] or map["1"]
+        ret.callback = map[3]
         return ret
     end,
     -- 登出
@@ -258,6 +325,14 @@ do
         ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
         return ret
     end,
+    configSubject = function(retInfor, cfgSubject, mapOrig) -- mapOrig:客户端原始入参
+        local ret = {}
+        ret[0] = 44
+        ret[3] = mapOrig and mapOrig.callback or nil
+        ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
+        ret[45] = NetProtoLearn.ST_cfgSubject.toMap(cfgSubject); -- 课程的配置信息
+        return ret
+    end,
     login = function(retInfor, custInfor, sessionID, mapOrig) -- mapOrig:客户端原始入参
         local ret = {}
         ret[0] = 15
@@ -274,6 +349,13 @@ do
         ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
         ret[23] = NetProtoLearn.ST_custInfor.toMap(custInfor); -- 客户信息
         ret[24] = sessionID; -- 会话id
+        return ret
+    end,
+    configCourse = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
+        local ret = {}
+        ret[0] = 46
+        ret[3] = mapOrig and mapOrig.callback or nil
+        ret[2] = NetProtoLearn.ST_retInfor.toMap(retInfor); -- 返回信息
         return ret
     end,
     logout = function(retInfor, mapOrig) -- mapOrig:客户端原始入参
@@ -301,16 +383,20 @@ do
     }
     --==============================
     NetProtoLearn.dispatch[34]={onReceive = NetProtoLearn.recive.delUser, send = NetProtoLearn.send.delUser, logicName = "cmd4user"}
+    NetProtoLearn.dispatch[44]={onReceive = NetProtoLearn.recive.configSubject, send = NetProtoLearn.send.configSubject, logicName = "cmd4subject"}
     NetProtoLearn.dispatch[15]={onReceive = NetProtoLearn.recive.login, send = NetProtoLearn.send.login, logicName = "cmd4cust"}
     NetProtoLearn.dispatch[17]={onReceive = NetProtoLearn.recive.regist, send = NetProtoLearn.send.regist, logicName = "cmd4cust"}
+    NetProtoLearn.dispatch[46]={onReceive = NetProtoLearn.recive.configCourse, send = NetProtoLearn.send.configCourse, logicName = "cmd4course"}
     NetProtoLearn.dispatch[13]={onReceive = NetProtoLearn.recive.logout, send = NetProtoLearn.send.logout, logicName = "cmd4cust"}
     NetProtoLearn.dispatch[35]={onReceive = NetProtoLearn.recive.addUser, send = NetProtoLearn.send.addUser, logicName = "cmd4user"}
     NetProtoLearn.dispatch[37]={onReceive = NetProtoLearn.recive.bandingUser, send = NetProtoLearn.send.bandingUser, logicName = "cmd4user"}
     --==============================
     NetProtoLearn.cmds = {
         delUser = "delUser", -- 删除用户,
+        configSubject = "configSubject", -- 配置课程,
         login = "login", -- 登陆,
         regist = "regist", -- 注册,
+        configCourse = "configCourse", -- 配置课件,
         logout = "logout", -- 登出,
         addUser = "addUser", -- 添加用户,
         bandingUser = "bandingUser", -- 分配用户给教师

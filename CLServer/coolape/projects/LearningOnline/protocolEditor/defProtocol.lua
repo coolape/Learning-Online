@@ -91,6 +91,19 @@ defProtocol.structs.custInfor = {
     }
 }
 
+defProtocol.structs.cfgSubject = {
+    "课程/科目配置",
+    {
+        idx = {0, "唯一标识"},
+        status = {0, "状态 0:正常;1:废除"},
+        gid = {0, "分类id一"},
+        gid2 = {0, "分类id二"},
+        gid3 = {0, "分类id三"},
+        name = {"", "名字"},
+        price = {0, "价格"},
+        note = {"", "备注"}
+    }
+}
 --===================================================
 --===================================================
 --===================================================
@@ -157,6 +170,23 @@ login = {       -- 接口名
         output = {structs.retInfor}, -- 出参
         outputDesc = {"返回信息"}, -- 出参说明
         logic = "cmd4user"
+    },
+    configSubject = {
+        desc = "配置课程", -- 接口说明
+        input = {"name", "gid", "gid2", "gid3", "price", "note"}, -- 入参
+        inputDesc = {"名字", "分类id一", "分类id二", "分类id三", "价格", "备注"}, -- 入参说明
+        output = {structs.retInfor, defProtocol.structs.cfgSubject}, -- 出参
+        outputDesc = {"返回信息", "课程的配置信息"}, -- 出参说明
+        logic = "cmd4subject"
+    },
+    configCourse = {
+        desc = "配置课件", -- 接口说明
+        input = {}, -- 入参
+        inputDesc = {}, -- 入参说明
+        output = {structs.retInfor}, -- 出参
+        outputDesc = {"返回信息"}, -- 出参说明
+        logic = "cmd4course",
+        httpType = "POST"
     }
 }
 

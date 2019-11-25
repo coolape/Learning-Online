@@ -11,6 +11,7 @@ local httpCMD = {
     httpPostBio = "/" .. projectName .. "/postbio",
     httpPost = "/" .. projectName .. "/post",
     httpGet = "/" .. projectName .. "/get",
+    httpCmd = "/" .. projectName .. "/cmd",
     httpStopserver = "/" .. projectName .. "/stopserver",
     httpManage = "/" .. projectName .. "/manage"
 }
@@ -74,6 +75,7 @@ function CMD.onrequset(url, method, header, body)
             else
                 return nil
             end
+        elseif path == httpCMD.httpCmd then
         else
             local content = parseStrBody(body)
         end
@@ -83,7 +85,8 @@ function CMD.onrequset(url, method, header, body)
             CMD.stop()
             return ""
         elseif path == httpCMD.httpGet then
-            -- 处理统一的get请求
+        elseif path == httpCMD.httpCmd then
+            -- 处理统一的cmd请求
             local requst = urllib.parse_query(query)
             -- Session 的处理
             local result = skynet.call(NetProtoName, "lua", "dispatcher", skynet.self(), requst, nil)

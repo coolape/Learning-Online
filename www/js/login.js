@@ -3,7 +3,7 @@ document.write('<script src="js/public/ready.js" type="text/javascript" ></scrip
 document.write('<script src="js/option/NetProtoLearnClient.js" type="text/javascript" ></script>');
 function ready(){
 	console.log("ready");
-	NetProtoLearn.init("http://127.0.0.1:8810/LearningOnline/get",
+	NetProtoLearn.init("http://127.0.0.1:8810/LearningOnline/cmd",
 	function () {
 		console.log("show hot  wheel");
 	},

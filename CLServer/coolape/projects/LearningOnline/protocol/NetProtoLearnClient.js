@@ -19,11 +19,15 @@
     * success：成功回调，（result, status, xhr）
     * error：失败回调，（jqXHR, textStatus, errorThrown）
     */
-    NetProtoLearn.call = function ( params, callback) {
+    NetProtoLearn.call = function ( params, callback, httpType) {
+        if(!httpType) {
+            httpType = "GET";
+        }
         if(NetProtoLearn.beforeCallFunc) {
             NetProtoLearn.beforeCallFunc();
         }
         $.ajax({
+            type: httpType,
             url: NetProtoLearn.url,
             data: params,
             dataType: 'jsonp',
@@ -184,6 +188,43 @@
             return r;
         },
     }
+    ///@class NetProtoLearn.ST_cfgSubject 课程/科目配置
+    ///@field public idx number 唯一标识
+    ///@field public note string 备注
+    ///@field public gid2 number 分类id二
+    ///@field public gid number 分类id一
+    ///@field public status number 状态 0:正常;1:废除
+    ///@field public price number 价格
+    ///@field public name string 名字
+    ///@field public gid3 number 分类id三
+    NetProtoLearn.ST_cfgSubject = {
+        toMap : function(m) {
+            var r = {};
+            if(!m) { return r; }
+            r[12] = m.idx  // 唯一标识 int
+            r[22] = m.note  // 备注 string
+            r[40] = m.gid2  // 分类id二 int
+            r[43] = m.gid  // 分类id一 int
+            r[29] = m.status  // 状态 0:正常;1:废除 int
+            r[41] = m.price  // 价格 int
+            r[18] = m.name  // 名字 string
+            r[42] = m.gid3  // 分类id三 int
+            return r;
+        },
+        parse : function(m) {
+            var r = {};
+            if(!m) { return r; }
+            r.idx = m[12] //  int
+            r.note = m[22] //  string
+            r.gid2 = m[40] //  int
+            r.gid = m[43] //  int
+            r.status = m[29] //  int
+            r.price = m[41] //  int
+            r.name = m[18] //  string
+            r.gid3 = m[42] //  int
+            return r;
+        },
+    }
     ///@class NetProtoLearn.ST_userInfor 用户信息
     ///@field public idx number 唯一标识
     ///@field public note string 备注
@@ -232,7 +273,20 @@
         ret[0] = 34;
         ret[1] = NetProtoLearn.getSession();
         ret[12] = idx; // 用户id
-        NetProtoLearn.call(ret, callback);
+        NetProtoLearn.call(ret, callback, null);
+    },
+    // 配置课程
+    configSubject : function(name, gid, gid2, gid3, price, note, callback) {
+        var ret = {};
+        ret[0] = 44;
+        ret[1] = NetProtoLearn.getSession();
+        ret[18] = name; // 名字
+        ret[43] = gid; // 分类id一
+        ret[40] = gid2; // 分类id二
+        ret[42] = gid3; // 分类id三
+        ret[41] = price; // 价格
+        ret[22] = note; // 备注
+        NetProtoLearn.call(ret, callback, null);
     },
     // 登陆
     login : function(custid, password, callback) {
@@ -241,7 +295,7 @@
         ret[1] = NetProtoLearn.getSession();
         ret[28] = custid; // 客户id
         ret[16] = password; // 密码
-        NetProtoLearn.call(ret, callback);
+        NetProtoLearn.call(ret, callback, null);
     },
     // 注册
     regist : function(custid, password, name, phone, email, channel, note, callback) {
@@ -255,7 +309,14 @@
         ret[20] = email; // 邮箱
         ret[21] = channel; // 来源渠道
         ret[22] = note; // 备注
-        NetProtoLearn.call(ret, callback);
+        NetProtoLearn.call(ret, callback, null);
+    },
+    // 配置课件
+    configCourse : function(callback) {
+        var ret = {};
+        ret[0] = 46;
+        ret[1] = NetProtoLearn.getSession();
+        NetProtoLearn.call(ret, callback, "POST");
     },
     // 登出
     logout : function(custid, callback) {
@@ -263,7 +324,7 @@
         ret[0] = 13;
         ret[1] = NetProtoLearn.getSession();
         ret[28] = custid; // 客户名
-        NetProtoLearn.call(ret, callback);
+        NetProtoLearn.call(ret, callback, null);
     },
     // 添加用户
     addUser : function(custid, name, birthday, sex, school, callback) {
@@ -275,7 +336,7 @@
         ret[32] = birthday; // 生日
         ret[30] = sex; // 性别 0:男, 1:女
         ret[31] = school; // 学校(可选)
-        NetProtoLearn.call(ret, callback);
+        NetProtoLearn.call(ret, callback, null);
     },
     // 分配用户给教师
     bandingUser : function(uidx, cidx, callback) {
@@ -284,7 +345,7 @@
         ret[1] = NetProtoLearn.getSession();
         ret[38] = uidx; // 用户id
         ret[39] = cidx; // 教师id(客户id)
-        NetProtoLearn.call(ret, callback);
+        NetProtoLearn.call(ret, callback, null);
     },
     };
     //==============================
@@ -295,6 +356,16 @@
         var ret = {};
         ret.cmd = "delUser";
         ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
+        return ret;
+    },
+    ///@class NetProtoLearn.RC_configSubject
+    ///@field public retInfor NetProtoLearn.ST_retInfor 返回信息
+    ///@field public cfgSubject NetProtoLearn.ST_cfgSubject 课程的配置信息
+    configSubject : function(map) {
+        var ret = {};
+        ret.cmd = "configSubject";
+        ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
+        ret.cfgSubject = NetProtoLearn.ST_cfgSubject.parse(map[45]) // 课程的配置信息
         return ret;
     },
     ///@class NetProtoLearn.RC_login
@@ -319,6 +390,14 @@
         ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
         ret.custInfor = NetProtoLearn.ST_custInfor.parse(map[23]) // 客户信息
         ret.sessionID = map[24] // 会话id
+        return ret;
+    },
+    ///@class NetProtoLearn.RC_configCourse
+    ///@field public retInfor NetProtoLearn.ST_retInfor 返回信息
+    configCourse : function(map) {
+        var ret = {};
+        ret.cmd = "configCourse";
+        ret.retInfor = NetProtoLearn.ST_retInfor.parse(map[2]) // 返回信息
         return ret;
     },
     ///@class NetProtoLearn.RC_logout
@@ -350,16 +429,20 @@
     };
     //==============================
     NetProtoLearn.dispatch[34]={onReceive : NetProtoLearn.recive.delUser, send : NetProtoLearn.send.delUser}
+    NetProtoLearn.dispatch[44]={onReceive : NetProtoLearn.recive.configSubject, send : NetProtoLearn.send.configSubject}
     NetProtoLearn.dispatch[15]={onReceive : NetProtoLearn.recive.login, send : NetProtoLearn.send.login}
     NetProtoLearn.dispatch[17]={onReceive : NetProtoLearn.recive.regist, send : NetProtoLearn.send.regist}
+    NetProtoLearn.dispatch[46]={onReceive : NetProtoLearn.recive.configCourse, send : NetProtoLearn.send.configCourse}
     NetProtoLearn.dispatch[13]={onReceive : NetProtoLearn.recive.logout, send : NetProtoLearn.send.logout}
     NetProtoLearn.dispatch[35]={onReceive : NetProtoLearn.recive.addUser, send : NetProtoLearn.send.addUser}
     NetProtoLearn.dispatch[37]={onReceive : NetProtoLearn.recive.bandingUser, send : NetProtoLearn.send.bandingUser}
     //==============================
     NetProtoLearn.cmds = {
         delUser : "delUser", // 删除用户,
+        configSubject : "configSubject", // 配置课程,
         login : "login", // 登陆,
         regist : "regist", // 注册,
+        configCourse : "configCourse", // 配置课件,
         logout : "logout", // 登出,
         addUser : "addUser", // 添加用户,
         bandingUser : "bandingUser", // 分配用户给教师
