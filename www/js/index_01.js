@@ -1,7 +1,10 @@
 document.write('<script src="js/must.js" type="text/javascript" ></script>');
 
 function ready() {
-    ihome_01._onInit();
+    XMLLoad.loadTxt('xml/index_01.xml', function(txt) {
+        $("#main_contect").append(txt);
+        ihome_01._onInit();
+    });
 }
 
 var ihome_01 = {};
