@@ -141,8 +141,8 @@ login = {       -- 接口名
     },
     logout = {
         desc = "登出", -- 接口说明
-        input = {"custid"}, -- 入参
-        inputDesc = {"客户名"}, -- 入参说明
+        input = {}, -- 入参
+        inputDesc = {}, -- 入参说明
         output = {structs.retInfor}, -- 出参
         outputDesc = {"返回信息"}, -- 出参说明
         logic = "cmd4cust"

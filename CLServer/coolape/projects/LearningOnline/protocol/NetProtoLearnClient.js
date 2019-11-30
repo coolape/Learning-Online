@@ -60,7 +60,7 @@
                     NetProtoLearn.afterCallFunc();
                 }
                 if(callback) {
-                    callback(nil, textStatus, jqXHR);
+                    callback(null, textStatus, jqXHR);
                 }
                 console.log(textStatus + ":" + errorThrown);
             }
@@ -143,15 +143,15 @@
     ///@field public idx number 唯一标识
     ///@field public note string 备注
     ///@field public status number 状态
+    ///@field public phone string 电话
     ///@field public phone2 string 紧急电话
     ///@field public email string 邮箱
-    ///@field public users table 用户列表
     ///@field public name string 名字
     ///@field public channel string 渠道来源
+    ///@field public users table 用户列表
     ///@field public groupid number 组id 1:家长,2:销售,3:教师,100:管理员
-    ///@field public belongid number 归属老师id
     ///@field public custid number 账号id
-    ///@field public phone string 电话
+    ///@field public belongid number 归属老师id
     NetProtoLearn.ST_custInfor = {
         toMap : function(m) {
             var r = {};
@@ -159,15 +159,15 @@
             r[12] = m.idx  // 唯一标识 int
             r[22] = m.note  // 备注 string
             r[29] = m.status  // 状态 int
+            r[19] = m.phone  // 电话 string
             r[25] = m.phone2  // 紧急电话 string
             r[20] = m.email  // 邮箱 string
-            r[26] = NetProtoLearn._toList(NetProtoLearn.ST_userInfor, m.users)  // 用户列表
             r[18] = m.name  // 名字 string
             r[21] = m.channel  // 渠道来源 string
+            r[26] = NetProtoLearn._toList(NetProtoLearn.ST_userInfor, m.users)  // 用户列表
             r[33] = m.groupid  // 组id 1:家长,2:销售,3:教师,100:管理员 int
-            r[27] = m.belongid  // 归属老师id int
             r[28] = m.custid  // 账号id int
-            r[19] = m.phone  // 电话 string
+            r[27] = m.belongid  // 归属老师id int
             return r;
         },
         parse : function(m) {
@@ -176,39 +176,39 @@
             r.idx = m[12] //  int
             r.note = m[22] //  string
             r.status = m[29] //  int
+            r.phone = m[19] //  string
             r.phone2 = m[25] //  string
             r.email = m[20] //  string
-            r.users = NetProtoLearn._parseList(NetProtoLearn.ST_userInfor, m[26])  // 用户列表
             r.name = m[18] //  string
             r.channel = m[21] //  string
+            r.users = NetProtoLearn._parseList(NetProtoLearn.ST_userInfor, m[26])  // 用户列表
             r.groupid = m[33] //  int
-            r.belongid = m[27] //  int
             r.custid = m[28] //  int
-            r.phone = m[19] //  string
+            r.belongid = m[27] //  int
             return r;
         },
     }
     ///@class NetProtoLearn.ST_cfgSubject 课程/科目配置
     ///@field public idx number 唯一标识
     ///@field public note string 备注
-    ///@field public gid2 number 分类id二
-    ///@field public gid number 分类id一
     ///@field public status number 状态 0:正常;1:废除
+    ///@field public gid number 分类id一
     ///@field public price number 价格
     ///@field public name string 名字
     ///@field public gid3 number 分类id三
+    ///@field public gid2 number 分类id二
     NetProtoLearn.ST_cfgSubject = {
         toMap : function(m) {
             var r = {};
             if(!m) { return r; }
             r[12] = m.idx  // 唯一标识 int
             r[22] = m.note  // 备注 string
-            r[40] = m.gid2  // 分类id二 int
-            r[43] = m.gid  // 分类id一 int
             r[29] = m.status  // 状态 0:正常;1:废除 int
+            r[43] = m.gid  // 分类id一 int
             r[41] = m.price  // 价格 int
             r[18] = m.name  // 名字 string
             r[42] = m.gid3  // 分类id三 int
+            r[40] = m.gid2  // 分类id二 int
             return r;
         },
         parse : function(m) {
@@ -216,12 +216,12 @@
             if(!m) { return r; }
             r.idx = m[12] //  int
             r.note = m[22] //  string
-            r.gid2 = m[40] //  int
-            r.gid = m[43] //  int
             r.status = m[29] //  int
+            r.gid = m[43] //  int
             r.price = m[41] //  int
             r.name = m[18] //  string
             r.gid3 = m[42] //  int
+            r.gid2 = m[40] //  int
             return r;
         },
     }
@@ -319,11 +319,10 @@
         NetProtoLearn.call(ret, callback, "POST");
     },
     // 登出
-    logout : function(custid, callback) {
+    logout : function(callback) {
         var ret = {};
         ret[0] = 13;
         ret[1] = NetProtoLearn.getSession();
-        ret[28] = custid; // 客户名
         NetProtoLearn.call(ret, callback, null);
     },
     // 添加用户
